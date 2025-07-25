@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "881736852038",
+    "project_id": "n8talk-edb22",
+    "storage_bucket": "n8talk-edb22.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:881736852038:android:98ef3a5858c25bc0ac2047",
+        "android_client_info": {
+          "package_name": "com.ara.chatflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByt0fmMcLrOu_2Meem5k8TEwJWQMYJBhI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
