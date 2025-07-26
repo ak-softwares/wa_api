@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../common/navigation_bar/appbar.dart';
-import '../../../../common/styles/spacing_style.dart';
 import '../../../../common/text/section_heading.dart';
-import '../../../../common/widgets/custom_shape/image/circular_image.dart';
 import '../../../../common/widgets/shimmers/user_shimmer.dart';
 import '../../../../utils/constants/colors.dart';
-import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../authentication/screens/check_login_screen/check_login_screen.dart';
 import '../../../authentication/controllers/authentication_controller/authentication_controller.dart';
 import '../../../settings/app_settings.dart';
-import '../user_profile/user_profile.dart';
+import '../user_profile_info/user_profile_info.dart';
 import 'widgets/contact_widget.dart';
 import 'widgets/menu.dart';
 
@@ -25,7 +22,7 @@ class UserMenuScreen extends StatelessWidget {
     final userController = Get.put(AuthenticationController());
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      userController.refreshAdmin();
+      userController.refreshUser();
     });
 
     return  Obx(() => Scaffold(
@@ -34,35 +31,33 @@ class UserMenuScreen extends StatelessWidget {
             ? const CheckLoginScreen()
             : RefreshIndicator(
                 color: AppColors.refreshIndicator,
-                onRefresh: () async => userController.refreshAdmin(),
-                child: SingleChildScrollView(
-                  padding: AppSpacingStyle.defaultPageVertical,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //User profile
-                      Heading(title: 'Your profile', paddingLeft: AppSizes.defaultSpace),
-                      CustomerProfileCard(userController: userController, showHeading: true),
+                onRefresh: () async => userController.refreshUser(),
+                child: ListView(
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-                      //Menu
-                      Heading(title: 'Menu', paddingLeft: AppSizes.defaultSpace),
-                      const Menu(),
+                    // User profile
+                    Heading(title: 'Your profile', paddingLeft: AppSizes.defaultSpace),
+                    CustomerProfileCard(userController: userController, showHeading: true),
 
-                      // Contacts
-                      SupportWidget(),
+                    // Menu
+                    Heading(title: 'Menu', paddingLeft: AppSizes.defaultSpace),
+                    const Menu(),
 
-                      // Version
-                      Center(
-                        child: Column(
-                          children: [
-                            Text('Accounts', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),),
-                            Text('v${AppSettings.appVersion}', style: TextStyle(fontSize: 12),)
-                          ],
-                        ),
+                    // Contacts
+                    SupportWidget(),
+
+                    // Version
+                    Center(
+                      child: Column(
+                        children: [
+                          Text('n8nTalk', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),),
+                          Text('v${AppSettings.appVersion}', style: TextStyle(fontSize: 12),)
+                        ],
                       ),
-                      const SizedBox(height: AppSizes.md),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: AppSizes.md),
+                  ],
                 ),
             ),
       ),
@@ -81,30 +76,26 @@ class CustomerProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Obx(() {
-          if(userController.isLoading.value) {
-            return const UserTileShimmer();
-          } else {
-             return ListTile(
-               onTap: () => Get.to(() => const UserProfileScreen()),
-                leading: RoundedImage(
-                  padding: 0,
-                  height: 40,
-                  width: 40,
-                  borderRadius: 100,
-                  isNetworkImage: userController.admin.value.avatarUrl != null ? true : false,
-                  image: userController.admin.value.avatarUrl ?? Images.tProfileImage
-                ),
-                title: Text((userController.admin.value.name?.isNotEmpty ?? false) ? userController.admin.value.name! : "User",),
-                subtitle: Text(userController.admin.value.email?.isNotEmpty ?? false ? userController.admin.value.email! : 'Email',),
-                trailing: Icon(Icons.arrow_forward_ios, size: 20,),
-             );
-          }
-        }),
-      ],
-    );
+    return Obx(() {
+      if(userController.isLoading.value) {
+        return const UserTileShimmer();
+      } else {
+         return ListTile(
+           onTap: () => Get.to(() => const UserProfileInfo()),
+            // leading: RoundedImage(
+            //   padding: 0,
+            //   height: 40,
+            //   width: 40,
+            //   borderRadius: 100,
+            //   isNetworkImage: userController.admin.value.avatarUrl != null ? true : false,
+            //   image: userController.admin.value.avatarUrl ?? Images.tProfileImage
+            // ),
+            title: Text((userController.user.value.name?.isNotEmpty ?? false) ? userController.user.value.name! : "User",),
+            subtitle: Text(userController.user.value.email?.isNotEmpty ?? false ? userController.user.value.email! : 'Email',),
+            trailing: Icon(Icons.arrow_forward_ios, size: 20,),
+         );
+      }
+    });
   }
 
 }

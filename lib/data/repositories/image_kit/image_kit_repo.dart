@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 
-import '../../../features/accounts/models/image_model.dart';
 import '../../../utils/constants/api_constants.dart';
 
 class ImageKitService {
@@ -43,41 +42,41 @@ class ImageKitService {
   }
 
   // Function to upload image
-  Future<ImageModel> uploadImage(File imageFile) async {
-    try {
-      // Compress the image
-      File? compressedImage = await compressImage(imageFile);
-      if (compressedImage == null) throw "Image compression failed";
-
-      var request = http.MultipartRequest('POST', Uri.parse(imageKitUploadUrl));
-
-      // Attach API Key (Basic Auth)
-      String basicAuth = 'Basic ${base64Encode(utf8.encode('$privateKey:'))}';
-      request.headers['Authorization'] = basicAuth;
-
-      // Attach file
-      request.files.add(await http.MultipartFile.fromPath(
-        'file',
-        compressedImage.path,
-      ));
-
-      // Add required `fileName` field
-      request.fields['fileName'] = basename(compressedImage.path);
-
-      // Execute request
-      var response = await request.send();
-      var responseData = await response.stream.bytesToString();
-      var jsonResponse = jsonDecode(responseData);
-
-      if (response.statusCode == 200) {
-        return ImageModel.fromJson(jsonResponse); // Return ImageModel instead of just URL
-      } else {
-        throw "Upload failed: ${jsonResponse['message']}";
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
+  // Future<ImageModel> uploadImage(File imageFile) async {
+  //   try {
+  //     // Compress the image
+  //     File? compressedImage = await compressImage(imageFile);
+  //     if (compressedImage == null) throw "Image compression failed";
+  //
+  //     var request = http.MultipartRequest('POST', Uri.parse(imageKitUploadUrl));
+  //
+  //     // Attach API Key (Basic Auth)
+  //     String basicAuth = 'Basic ${base64Encode(utf8.encode('$privateKey:'))}';
+  //     request.headers['Authorization'] = basicAuth;
+  //
+  //     // Attach file
+  //     request.files.add(await http.MultipartFile.fromPath(
+  //       'file',
+  //       compressedImage.path,
+  //     ));
+  //
+  //     // Add required `fileName` field
+  //     request.fields['fileName'] = basename(compressedImage.path);
+  //
+  //     // Execute request
+  //     var response = await request.send();
+  //     var responseData = await response.stream.bytesToString();
+  //     var jsonResponse = jsonDecode(responseData);
+  //
+  //     if (response.statusCode == 200) {
+  //       return ImageModel.fromJson(jsonResponse); // Return ImageModel instead of just URL
+  //     } else {
+  //       throw "Upload failed: ${jsonResponse['message']}";
+  //     }
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
 
   Future<void> deleteImage(String fileId) async {
     try {

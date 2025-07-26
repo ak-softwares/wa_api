@@ -33,15 +33,17 @@ class SignUpScreen extends StatelessWidget {
               Form(
                   key: controller.signupFormKey,
                   child: Column(
+                    spacing: AppSizes.inputFieldSpace,
                       children: [
-                        //Name
+
+                        // Name
                         TextFormField(
-                          controller: controller.fullName,
-                          validator: (value) => Validator.validateEmptyText(fieldName: AppTexts.firstName, value: value),
-                          decoration: const InputDecoration(prefixIcon: Icon(Iconsax.user), labelText: AppTexts.firstName),
+                          controller: controller.name,
+                          validator: (value) => Validator.validateEmptyText(fieldName: 'Name', value: value),
+                          decoration: const InputDecoration(prefixIcon: Icon(Iconsax.user), labelText: 'Name'),
                         ),
-                        const SizedBox(height: AppSizes.inputFieldSpace),
-                        //Email
+
+                        // Email
                         TextFormField(
                             controller: controller.email,
                             validator: (value) => Validator.validateEmail(value),
@@ -50,8 +52,8 @@ class SignUpScreen extends StatelessWidget {
                                 labelText: AppTexts.email
                             )
                         ),
-                        //Password
-                        const SizedBox(height: AppSizes.inputFieldSpace),
+
+                        // Password
                         Obx(
                             () => TextFormField(
                               controller: controller.password,
@@ -66,8 +68,8 @@ class SignUpScreen extends StatelessWidget {
                                   )
                               )
                         )),
-                        // phone
-                        const SizedBox(height: AppSizes.inputFieldSpace),
+
+                        // Phone
                         TextFormField(
                             controller: controller.phone,
                             validator: (value) => Validator.validatePhoneNumber(value),
@@ -77,11 +79,7 @@ class SignUpScreen extends StatelessWidget {
                             )
                         ),
 
-                        //terms and conditions
-                        const SizedBox(height: AppSizes.spaceBtwSection),
-
-                        // signup button
-                        const SizedBox(height: AppSizes.inputFieldSpace),
+                        // Signup button
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
@@ -92,47 +90,6 @@ class SignUpScreen extends StatelessWidget {
                       ]
                   )
               ),
-
-              // //already a Member? Divider
-              // const SizedBox(height: TSizes.spaceBtwSection),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              //   child: Row(
-              //     children: [
-              //       Expanded(child: Divider(
-              //         thickness: 0.5,
-              //         color: dark ? Colors.grey[300] : Colors.grey[700],
-              //       )),
-              //       Padding(
-              //         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              //         child: Text(TTexts.orSignUpWith.capitalize!, style: Theme.of(context).textTheme.labelMedium),
-              //       ),
-              //       Expanded(child: Divider(
-              //         thickness: 0.5,
-              //         color: dark ? Colors.grey[300] : Colors.grey[700],
-              //       )),
-              //     ],
-              //   ),
-              // ),
-              //
-              // //Social Login
-              // const SizedBox(height: TSizes.spaceBtwSection),
-              // const TSocialButtons(),
-              //
-              //
-              // const SizedBox(height: TSizes.spaceBtwSection),
-
-              // already a Member? Login
-              // Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       Text('Already a member?', style: TextStyle(color: Colors.grey[700])),
-              //       TextButton(
-              //           onPressed: () => Get.to(const LoginScreen()),
-              //           child: Text('Login', style: Theme.of(context).textTheme.displayMedium)
-              //       )
-              //     ]
-              // )
             ],
           ),
         ),

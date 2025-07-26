@@ -1,14 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-import '../../../../common/dialog_box_massages/dialog_massage.dart';
 import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
 import '../../../../data/repositories/mongodb/user/user_repositories.dart';
-import '../../../../data/repositories/woocommerce/customers/woo_customer_repository.dart';
 import '../../../../utils/constants/enums.dart';
 import '../../personalization/models/user_model.dart';
 
-class AppUserListController extends GetxController{
+class AppUserListController extends GetxController {
   static AppUserListController get instance => Get.find();
 
   // Variable
@@ -19,7 +16,6 @@ class AppUserListController extends GetxController{
 
   RxList<UserModel> users = <UserModel>[].obs;
   final mongoUserRepository = Get.put(MongoUserRepository());
-  final wooCustomersRepository = Get.put(WooCustomersRepository());
 
   // Get All products
   Future<void> getAllUsers() async {

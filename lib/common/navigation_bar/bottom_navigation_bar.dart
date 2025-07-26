@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../features/accounts/screen/account_voucher/account_vouchers.dart';
-import '../../features/accounts/screen/financials/financials.dart';
-import '../../features/accounts/screen/products/products.dart';
-import '../../features/accounts/screen/transaction/transactions.dart';
+import '../../features/chat/screens/chats/chats.dart';
 import '../../features/personalization/screens/user_menu/user_menu_screen.dart';
 
-import '../../utils/constants/enums.dart';
 import '../../utils/constants/icons.dart';
 import '../dialog_box_massages/snack_bar_massages.dart';
 
@@ -26,10 +22,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   int _currentIndex = 0;
   DateTime? _lastBackPressedTime; // Variable to track the time of the last back button press
   final screens = [
-    const Financials(),
-    const AccountVouchers(voucherType: AccountVoucherType.sale),
-    const Transactions(),
-    const Products(),
+    const Chats(),
     const UserMenuScreen(),
   ];
 
@@ -101,21 +94,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
               // unselectedFontSize: 20,
               items: [
                 BottomNavigationBarItem(
-                  label: 'Financials',
-                  icon: Icon(Icons.home_outlined),
-                  activeIcon: Icon(Icons.home), // Icon when selected
-                ),
-                BottomNavigationBarItem(
-                  label: 'Sales',
-                  icon: Icon(AppIcons.sales),
-                ),
-                BottomNavigationBarItem(
-                  label: 'Transaction',
-                  icon: Icon(Icons.receipt),
-                ),
-                BottomNavigationBarItem(
-                  label: 'Product',
-                  icon: Icon(AppIcons.products),
+                  label: 'Chats',
+                  icon: Icon(Icons.chat),
                 ),
                 BottomNavigationBarItem(
                   label: 'User Menu',

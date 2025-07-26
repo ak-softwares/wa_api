@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../features/accounts/controller/image/image_controller.dart';
 import '../../../../utils/constants/image_strings.dart';
 import '../../shimmers/shimmer_effect.dart';
 
@@ -21,7 +20,7 @@ class RoundedImage extends StatelessWidget {
     this.isNetworkImage = false,
     this.isTapToEnlarge = false,
     this.isFileImage = false,
-    this.borderRadius = 0,
+    this.radius = 0,
     this.onTap,
     this.border,
   });
@@ -33,16 +32,16 @@ class RoundedImage extends StatelessWidget {
   final bool isFileImage;
   final Color? overlayColor;
   final Color? backgroundColor;
-  final double width, height, padding, borderRadius;
+  final double width, height, padding, radius;
   final BoxBorder? border;
   final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final imagesController = Get.put(ImagesController());
-
+    // final imagesController = Get.put(ImagesController());
     return InkWell(
-      onTap: isTapToEnlarge ? () => imagesController.showEnlargedImage(image) : onTap,
+      // onTap: isTapToEnlarge ? () => imagesController.showEnlargedImage(image) : onTap,
+      onTap: onTap,
       child: Container(
         width: width,
         height: height,
@@ -50,15 +49,15 @@ class RoundedImage extends StatelessWidget {
         decoration: BoxDecoration(
           border: border,
           color: backgroundColor ?? Colors.transparent,
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: BorderRadius.circular(radius),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: BorderRadius.circular(radius),
           child: isNetworkImage
               ? CachedNetworkImage(
                   fit: fit,
                   color: overlayColor,
-                  imageUrl: image != '' ? image : Images.defaultWooPlaceholder,
+                  imageUrl: image.isNotEmpty ? image : Images.defaultWooPlaceholder,
                   progressIndicatorBuilder: (context, url, downloadProgress) => ShimmerEffect(width: width, height: height, radius: 0),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 )

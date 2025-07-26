@@ -22,7 +22,6 @@ class SplashLoaderScreen extends StatelessWidget {
       // Initialize your auth controller
       final auth = Get.put(AuthenticationController());
       final isAdmin = auth.isAdminLogin.value;
-      await auth.initializeEcommercePlatformCredentials();
       return isAdmin ? const BottomNavigation() : const MobileLoginScreen();
     } catch (e) {
       return const ErrorScreen();

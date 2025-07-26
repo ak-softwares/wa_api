@@ -65,24 +65,6 @@ class ChangeUserProfile extends StatelessWidget {
                               labelText: AppTexts.tPhone,
                             )
                         ),
-
-                        // Company
-                        TextFormField(
-                          controller: controller.companyName,
-                          decoration: const InputDecoration(prefixIcon: Icon(Iconsax.shop), labelText: 'Company'),
-                        ),
-
-                        // Gst
-                        TextFormField(
-                          controller: controller.gstNumber,
-                          decoration: const InputDecoration(prefixIcon: Icon(Iconsax.direct_right), labelText: 'GST Number'),
-                        ),
-
-                        // Pan
-                        TextFormField(
-                          controller: controller.panNumber,
-                          decoration: const InputDecoration(prefixIcon: Icon(Iconsax.card), labelText: 'PAN Number'),
-                        ),
                       ]
                   )
               ),

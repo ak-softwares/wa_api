@@ -1,19 +1,7 @@
 
 class DbCollections{
-  static const String orders      = 'orders';
-  static const String products    = 'products';
-  static const String users       = 'users';
-  static const String categories  = 'categories';
-  static const String banners     = 'banners';
-  static const String addresses   = 'addresses';
-  static const String meta        = 'meta_data';
-  static const String purchaseList = 'purchase_list';
-  static const String customers = 'customers';
-  static const String vendors = 'vendors';
-  static const String accounts = 'accounts';
-  static const String transactions = 'transactions';
-  static const String expenses = 'expenses';
-  static const String accountVouchers = 'account_vouchers';
+  static const String users  = 'users';
+  static const String n8nChatHistories  = 'n8n_chat_histories';
 }
 
 
@@ -418,6 +406,12 @@ class PaymentMethodName {
   static const String razorpay = 'razorpay';
 }
 
+class ChatsFieldName {
+  static const String id = '_id';
+  static const String sessionId = 'sessionId';
+  static const String messages = 'messages';
+}
+
 class PaymentMethodTitle {
   static const String cod = 'Cash on Delivery';
   static const String prepaid = 'Prepaid';
@@ -428,64 +422,28 @@ class PaymentMethodTitle {
 class UserFieldConstants {
   // Common Fields
   static const String id = '_id';
-  static const String documentId = 'document_id';
-  static const String userId = 'user_id';
   static const String email = 'email';
   static const String password = 'password';
-  static const String role = 'role';
   static const String name = 'name';
-  static const String firstName = 'first_name';
-  static const String lastName = 'last_name';
-  static const String fullName = 'full_name';
   static const String phone = 'phone';
-  static const String avatarUrl = 'avatar_url';
-  static const String dateCreated = 'date_created';
-  static const String dateModified = 'date_modified';
-  static const String isPayingCustomer = 'is_paying_customer';
-  static const String metaData = 'meta_data';
+  static const String dateCreated = 'dateCreated';
+  static const String dateModified = 'dateModified';
+  static const String address = 'billing';
+  static const String fCMToken = 'fCMToken';
+  static const String mongoDbCredentials = 'mongoDbCredentials';
 
-  // Address Fields
-  static const String billing = 'billing';
-  static const String shipping = 'shipping';
-
-  // Metadata Specific Fields
-  static const String fCMToken = 'easyapp_fcm_token';
-  static const String verifyPhone = 'easyapp_verify_phone';
-  static const String isCODBlocked = 'easyapp_cod_blocked';
-
-  // Activity Fields
-  static const String activeTime = 'active_time';
-  static const String cartItems = 'cart_items';
-  static const String wishlistItems = 'wishlist_items';
-  static const String recentItems = 'recent_items';
-  static const String items = 'items';
-  static const String customerOrders = 'customer_orders';
-  static const String ecommercePlatform = 'ecommerce_platform';
-  static const String wooCommerceCredentials = 'woo_commerce_credentials';
-  static const String shopifyCredentials = 'shopify_credentials';
-  static const String amazonCredentials = 'amazon_credentials';
-  static const String selectedAccount = 'selected_account';
-
-  // User Roles
-  static const String roleCustomer = 'customer';
-  static const String roleVendor = 'vendor';
-  static const String roleAdmin = 'admin';
-
-  // Additional Fields (from both classes)
-  static const String username = 'username';
-  static const String company = 'company';
-  static const String gstNumber = 'gst_number';
-  static const String panNumber = 'pan_number';
-  static const String bankAccount = 'bank_account';
-  static const String balance = 'balance';
-  static const String openingBalance = 'opening_balance';
-  static const String userType = 'user_type';
 }
 
 class WoocommerceFieldName {
   static const String domain = 'domain';
   static const String key = 'key';
   static const String secret = 'secret';
+}
+
+class MongoDBCredentialsFieldName {
+  static const String connectionString = 'connectionString';
+  static const String dataBaseName = 'dataBaseName';
+  static const String collectionName = 'collectionName';
 }
 
 class AddressFieldName {

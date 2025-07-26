@@ -1,19 +1,19 @@
 flutter_native_splash:
 
   # Light theme
-  color: "#FFFFFF"
-  image: assets/logos/ara_accounts_splash.png
+  color: "#253440"
+  image: assets/logos/n8nTalk.png
 
   # Dark theme
-  color_dark: "#0B1014"
-  image_dark: assets/logos/ara_accounts_splash.png
+  color_dark: "#253440"
+  image_dark: assets/logos/n8nTalk.png
 
   android_12:
-    color: "#FFFFFF"
-    image: assets/logos/ara_accounts_splash.png
+    color: "#253440"
+    image: assets/logos/n8nTalk.png
 
-    color_dark: "#0B1014"
-    image_dark: assets/logos/ara_accounts_splash.png
+    color_dark: "#253440"
+    image_dark: assets/logos/n8nTalk.png
 
   web: false
 

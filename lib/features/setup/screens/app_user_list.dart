@@ -1,5 +1,4 @@
 import '../../../../common/dialog_box_massages/animation_loader.dart';
-import '../../../../common/layout_models/product_grid_layout.dart';
 import '../../../../common/styles/spacing_style.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/image_strings.dart';
@@ -10,7 +9,6 @@ import 'package:get/get.dart';
 import '../../../../common/navigation_bar/appbar.dart';
 import '../controllers/app_user_list_controller.dart';
 import 'widget/user_shimmer.dart';
-import 'widget/user_tile.dart';
 
 class AppUserList extends StatelessWidget {
   const AppUserList({super.key});
@@ -64,18 +62,18 @@ class AppUserList extends StatelessWidget {
                   final customers = controller.users;
                   return Column(
                     children: [
-                      GridLayout(
-                          itemCount: controller.isLoadingMore.value ? customers.length + 2 : customers.length,
-                          crossAxisCount: 1,
-                          mainAxisExtent: userTileHeight,
-                          itemBuilder: (context, index) {
-                            if (index < customers.length) {
-                              return UserTile(user: customers[index]);
-                            } else {
-                              return UserShimmer();
-                            }
-                          }
-                      ),
+                      // GridLayout(
+                      //     itemCount: controller.isLoadingMore.value ? customers.length + 2 : customers.length,
+                      //     crossAxisCount: 1,
+                      //     mainAxisExtent: userTileHeight,
+                      //     itemBuilder: (context, index) {
+                      //       if (index < customers.length) {
+                      //         return UserTile(user: customers[index]);
+                      //       } else {
+                      //         return UserShimmer();
+                      //       }
+                      //     }
+                      // ),
                     ],
                   );
                 }

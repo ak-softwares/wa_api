@@ -19,46 +19,6 @@ class MongoUserRepository extends GetxController {
   final String collectionName = DbCollections.users;
   final int itemsPerPage = int.tryParse(APIConstant.itemsPerPage) ?? 10;
 
-  // Fetch products by search query & pagination
-  Future<List<UserModel>> fetchUsersBySearchQuery(
-      {required String query, required UserType userType, int page = 1, required String userId}) async {
-    try {
-      // Fetch products from MongoDB with search and pagination
-      final List<Map<String, dynamic>> customersData = await _mongoFetch.fetchDocumentsBySearchQuery(
-          collectionName: collectionName,
-          query: query,
-          itemsPerPage: itemsPerPage,
-          page: page,
-          filter: {UserFieldConstants.userType: userType.name, UserFieldConstants.userId: userId},
-      );
-
-      // Convert data to a list of ProductModel
-      final List<UserModel> customers = customersData.map((data) => UserModel.fromJson(data)).toList();
-      return customers;
-    } catch (e) {
-      throw 'Failed to fetch products: $e';
-    }
-  }
-
-  // Fetch All Products from MongoDB
-  Future<List<UserModel>> fetchUsers({required UserType userType, int page = 1, required String userId}) async {
-    try {
-      // Fetch products from MongoDB with pagination
-      final List<Map<String, dynamic>> usersData =
-          await _mongoFetch.fetchDocuments(
-              collectionName:collectionName,
-              filter: {UserFieldConstants.userType: userType.name, UserFieldConstants.userId: userId},
-              page: page
-          );
-
-      // Convert data to a list of ProductModel
-      final List<UserModel> users = usersData.map((data) => UserModel.fromJson(data)).toList();
-      return users;
-    } catch (e) {
-      throw 'Failed to fetch user: $e';
-    }
-  }
-
   // Fetch All Products from MongoDB
   Future<List<UserModel>> fetchAppUsers({required UserType userType, int page = 1}) async {
     try {
@@ -66,7 +26,6 @@ class MongoUserRepository extends GetxController {
       final List<Map<String, dynamic>> usersData =
       await _mongoFetch.fetchDocuments(
           collectionName:collectionName,
-          filter: {UserFieldConstants.userType: userType.name},
           page: page
       );
 
@@ -105,19 +64,6 @@ class MongoUserRepository extends GetxController {
     }
   }
 
-  // Update a customer
-  Future<void> updateUserBalance({required int userID, required double balance, required bool isAddition}) async {
-    try {
-      await _mongoUpdate.updateUserBalanceById(
-          collectionName: collectionName,
-          id: userID,
-          balance: balance,
-          isAddition: isAddition,
-      );
-    } catch (e) {
-      throw 'Failed to update customer: $e';
-    }
-  }
 
   // Upload multiple products
   Future<void> insertUsers({required List<UserModel> customers}) async {
@@ -166,33 +112,6 @@ class MongoUserRepository extends GetxController {
     }
   }
 
-  // Get the next customer ID
-  Future<int> fetchUserGetNextId({required UserType userType, required String userId}) async {
-    try {
-      int nextID = await _mongoFetch.fetchNextId(
-          collectionName: collectionName,
-          fieldName: UserFieldConstants.documentId,
-          filter: {UserFieldConstants.userType: userType.name, UserFieldConstants.userId: userId},
-      );
-      return nextID;
-    } catch (e) {
-      throw 'Failed to fetch customer ID: $e';
-    }
-  }
-
-  // Fetch All Products from MongoDB
-  Future<double> calculateAccountPayable({required UserType userType, required String userId}) async {
-    try {
-      // Fetch products from MongoDB with pagination
-      final double totalAccountPayable = await _mongoFetch.calculateAccountPayable(
-        collectionName: collectionName,
-        filter: {UserFieldConstants.userType: userType.name, UserFieldConstants.userId: userId},
-      );
-      return totalAccountPayable;
-    } catch (e) {
-      rethrow;
-    }
-  }
 
   // Fetch Product's IDs from MongoDB
   Future<Set<int>> fetchUsersIds({required String userId}) async {
@@ -208,23 +127,22 @@ class MongoUserRepository extends GetxController {
   }
 
   // Get the total count of products in the collection
-  Future<int> fetchUsersCount({required UserType userType, required String userId}) async {
+  Future<int> fetchUsersCount() async {
     try {
       int count = await _mongoFetch.fetchCollectionCount(
         collectionName: collectionName,
-        filter: {UserFieldConstants.userType: userType.name, UserFieldConstants.userId: userId},
       );
       return count;
     } catch (e) {
       throw 'Failed to fetch users count: $e';
     }
   }
+
   // Get the total count of products in the collection
   Future<int> fetchAppUserCount({required UserType userType}) async {
     try {
       int count = await _mongoFetch.fetchCollectionCount(
         collectionName: collectionName,
-        filter: {UserFieldConstants.userType: userType.name},
       );
       return count;
     } catch (e) {

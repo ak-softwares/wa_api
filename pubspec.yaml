@@ -6,7 +6,7 @@ description: Sync WhatsApp chats with n8n.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 # where 2.0.0 is app version and +5 is Version code 2 update every time when update on play store
-version: 1.0.0+1
+version: 1.0.1+7
 
 environment:
   sdk: '>=3.1.4 <4.0.0'
@@ -127,7 +127,7 @@ flutter:
     - assets/images/payment_logo/
     - assets/images/banners/
     - assets/images/youtube_banner/
-    - assets/images/ecommerce_platform/
+    - assets/images/setup_logos/
     - assets/logos/
     - assets/icons/brands/
     - assets/icons/categories/

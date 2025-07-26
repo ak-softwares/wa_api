@@ -12,11 +12,11 @@ class APIConstant {
 
   static String get authorization => 'Basic ${base64Encode(utf8.encode('$wooConsumerKey:$wooConsumerSecret'))}';
 
-  static void initializeWooCommerceCredentials({required UserModel user}) {
-    wooBaseDomain     = user.wooCommerceCredentials?.domain ?? '';
-    wooConsumerKey    = user.wooCommerceCredentials?.key ?? '';
-    wooConsumerSecret = user.wooCommerceCredentials?.secret ?? '';
-  }
+  // static void initializeWooCommerceCredentials({required UserModel user}) {
+  //   wooBaseDomain     = user.wooCommerceCredentials?.domain ?? '';
+  //   wooConsumerKey    = user.wooCommerceCredentials?.key ?? '';
+  //   wooConsumerSecret = user.wooCommerceCredentials?.secret ?? '';
+  // }
 
   // WooCommerce API Constant
   // static final String wooBaseDomain         =  dotenv.get('WOO_API_URL', fallback: '');

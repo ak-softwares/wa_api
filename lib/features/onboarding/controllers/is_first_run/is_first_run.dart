@@ -23,15 +23,5 @@ class IsFirstRunController extends GetxController {
     localStorage.write(LocalStorage.isFirstRun, false);
   }
 
-  static Future<void> activation(UserModel customer) async {
-    try {
-      final userId = customer.documentId.toString();
-
-      // set
-      updateIsFirstRun();
-    }catch(e){
-      rethrow;
-    }
-  }
 
 }

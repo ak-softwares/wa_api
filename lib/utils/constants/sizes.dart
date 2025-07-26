@@ -166,6 +166,13 @@ class AppSizes {
   static const double accountImageHeight = 30.0;
   static const double accountImageWidth = 30.0;
 
+  // Chat Tile
+  static const double chatTileHeight = 60;
+  static const double chatTileWidth = 100.0;
+  static const double chatTileRadius = 5.0;
+  static const double chatImageHeight = 30.0;
+  static const double chatImageWidth = 30.0;
+
   // Transaction Tile
   static const double transactionTileHeight = 150;
   static const double transactionTileWidth = 100.0;

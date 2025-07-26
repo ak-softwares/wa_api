@@ -17,23 +17,21 @@ class MongoAuthenticationRepository extends GetxController {
   final MongoInsert _mongoInsert = MongoInsert();
   final MongoUpdate _mongoUpdate = MongoUpdate();
   final MongoDelete _mongoDelete = MongoDelete();
-  final String collectionName = 'users';
-  final UserType userType = UserType.admin;
-  // variable
-  final _auth = FirebaseAuth.instance;
-  // Upload multiple products
+  final String collectionName = DbCollections.users;
+
+
   Future<void> singUpWithEmailAndPass({required UserModel user}) async {
     try {
       // Check if a user with the same email or phone already exists
       final existingUser = await _mongoFetch.findOne(
         collectionName: collectionName,
-         filter : {
-                    r'$or': [
-                      {UserFieldConstants.email: user.email},
-                      {UserFieldConstants.phone: user.phone},
-                    ]
-                  },
-        );
+        filter: {
+          r'$or': [
+            {UserFieldConstants.email: user.email},
+            {UserFieldConstants.phone: user.phone},
+          ],
+        },
+      );
       if (existingUser != null) {
         throw 'Email or phone number already exists';
       }
@@ -52,7 +50,6 @@ class MongoAuthenticationRepository extends GetxController {
         collectionName: collectionName,
         filter: {
           UserFieldConstants.email: email,
-          UserFieldConstants.userType: userType.name,
         },
       );
       if (existingUser == null) {
@@ -82,7 +79,6 @@ class MongoAuthenticationRepository extends GetxController {
         collectionName: collectionName,
         filter: {
           UserFieldConstants.phone: phone,
-          UserFieldConstants.userType: userType.name, // assuming you're storing userType as a string like 'admin'
         },
       );
 
@@ -108,7 +104,6 @@ class MongoAuthenticationRepository extends GetxController {
         collectionName: collectionName,
         filter: {
           UserFieldConstants.email: email,
-          UserFieldConstants.userType: userType.name, // assuming you're storing userType as a string like 'admin'
         },
       );
 
@@ -141,7 +136,7 @@ class MongoAuthenticationRepository extends GetxController {
 
       // User authenticated successfully (proceed with login session)
     } catch (e) {
-      throw 'user not found: $e';
+      rethrow;
     }
   }
 
@@ -157,7 +152,6 @@ class MongoAuthenticationRepository extends GetxController {
         throw 'Invalid user found for this email'; // User not found
       }
 
-      user.userType =  UserType.admin;
       // Update user data in the database
       await _mongoUpdate.updateDocument(
         collectionName: collectionName,

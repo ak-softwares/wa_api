@@ -9,7 +9,6 @@ import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
 import '../../../../common/widgets/network_manager/network_manager.dart';
 import '../../../../data/repositories/mongodb/authentication/authentication_repositories.dart';
 import '../../../../data/repositories/whatsapp/authentication/whatsapp_auth_repo.dart';
-import '../../../../data/repositories/woocommerce/customers/woo_customer_repository.dart';
 import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/validators/validation.dart';
 import '../authentication_controller/authentication_controller.dart';
@@ -46,7 +45,6 @@ class OTPController extends GetxController {
 
   String saveGenerateOTP = '';
 
-  final wooCustomersRepository = Get.put(WooCustomersRepository());
   final mongoAuthenticationRepository = Get.put(MongoAuthenticationRepository());
   final userController = Get.put(AuthenticationController());
 
@@ -55,23 +53,7 @@ class OTPController extends GetxController {
   void onClose() {
     super.onClose();
     otp.dispose();
-    // SmsAutoFill().unregisterListener();
   }
-
-  // void initSmsAutoFill() async {
-  //   // Request permission if not granted
-  //   final permissionStatus = await RequestPermissions.checkPermission(Permission.sms);
-  //   if (permissionStatus) {
-  //     // Get app signature
-  //     final signature = await SmsAutoFill().getAppSignature;
-  //     // Start listening for SMS code
-  //     SmsAutoFill().listenForCode;
-  //   } else {
-  //     // Handle permission denied
-  //     Get.snackbar('Permission Denied', 'SMS permission is required');
-  //     // RequestPermissions.showPermissionDialog(context);
-  //   }
-  // }
 
   // Send OTP through WhatsApp API
   Future<void> whatsappSendOtp({required String phone}) async {

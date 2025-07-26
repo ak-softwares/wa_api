@@ -7,8 +7,6 @@ import '../../../../common/dialog_box_massages/full_screen_loader.dart';
 import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
 import '../../../../common/widgets/network_manager/network_manager.dart';
 import '../../../../data/repositories/mongodb/authentication/authentication_repositories.dart';
-import '../../../../data/repositories/woocommerce/authentication/woo_authentication.dart';
-import '../../../../data/repositories/woocommerce/customers/woo_customer_repository.dart';
 import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/local_storage_constants.dart';
 import '../authentication_controller/authentication_controller.dart';
@@ -25,8 +23,6 @@ class LoginController extends GetxController {
   final password  = TextEditingController();
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
 
-  final wooCustomersRepository = Get.put(WooCustomersRepository());
-  final wooAuthenticationRepository = Get.put(WooAuthenticationRepository());
   final mongoAuthenticationRepository = Get.put(MongoAuthenticationRepository());
   final userController = Get.put(AuthenticationController());
 
@@ -73,42 +69,6 @@ class LoginController extends GetxController {
     }
   }
 
-  //Login with email and password form woocommerce
-  Future<void> wooLoginWithEmailAndPassword() async {
-    try {
-      //Start Loading
-      FullScreenLoader.openLoadingDialog('We are processing your information..', Images.docerAnimation);
-      //check internet connectivity
-      final isConnected = await NetworkManager.instance.isConnected();
-      if (!isConnected) {
-        //remove Loader
-        FullScreenLoader.stopLoading();
-        return;
-      }
-      // Form Validation
-      if (!loginFormKey.currentState!.validate()) {
-        //remove Loader
-        FullScreenLoader.stopLoading();
-        return;
-      }
-
-      String userId = await wooAuthenticationRepository.loginWithEmailAndPass(email.text.trim(), password.text);
-      final UserModel customer = await wooCustomersRepository.fetchCustomerById(userId);
-
-      //save to local storage
-      if (rememberMe.value) {
-        localStorage.write(LocalStorage.rememberMeEmail, email.text.trim());
-        localStorage.write(LocalStorage.rememberMePassword, password.text);
-      }
-      //remove Loader
-      FullScreenLoader.stopLoading();
-      // authenticationRepository.login(user: customer);
-    } catch (error) {
-      //remove Loader
-      FullScreenLoader.stopLoading();
-      AppMassages.errorSnackBar(title: 'Error', message: error.toString());
-    }
-  }
 }
 
 

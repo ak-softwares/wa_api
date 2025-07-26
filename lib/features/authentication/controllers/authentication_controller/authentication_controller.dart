@@ -9,7 +9,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../../../../common/dialog_box_massages/dialog_massage.dart';
 import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
 import '../../../../data/repositories/mongodb/authentication/authentication_repositories.dart';
-import '../../../../data/repositories/woocommerce/customers/woo_customer_repository.dart';
 import '../../../../utils/constants/api_constants.dart';
 import '../../../../utils/constants/enums.dart';
 import '../../../../utils/constants/local_storage_constants.dart';
@@ -27,7 +26,7 @@ class AuthenticationController extends GetxController {
   final int loginExpiryInDays = 30;
 
   final localStorage = GetStorage();
-  Rx<UserModel> admin = UserModel.empty().obs;
+  Rx<UserModel> user = UserModel().obs;
   final _auth = FirebaseAuth.instance;
 
 
@@ -45,29 +44,12 @@ class AuthenticationController extends GetxController {
     checkIsAdminLogin();
   }
 
-  Future<void> initializeEcommercePlatformCredentials() async {
-    try {
-      if (admin.value.email == null || admin.value.email!.isEmpty) {
-        final String localAuthUserToken = await fetchLocalAuthToken();
-        final userData = await mongoAuthenticationRepository.fetchUserById(userId: localAuthUserToken);
-        admin(userData);
-      }
-
-      if (admin.value.ecommercePlatform == EcommercePlatform.woocommerce) {
-        APIConstant.initializeWooCommerceCredentials(user: admin.value);
-      }
-    } catch (e) {
-      debugPrint('Failed to initialize platform credentials: $e');
-    }
-  }
-
-
   // Check if the user is logged in
   Future<void> checkIsAdminLogin() async {
     final String localAuthUserToken = await fetchLocalAuthToken();
     if (localAuthUserToken.isNotEmpty) {
       isAdminLogin.value = true;
-      admin.value = UserModel(id: localAuthUserToken);
+      user.value = UserModel(id: localAuthUserToken);
     }
   }
 
@@ -81,10 +63,10 @@ class AuthenticationController extends GetxController {
   }
 
   String get userId {
-    if (!isAdminLogin.value || admin.value.id == null || admin.value.id!.isEmpty) {
+    if (!isAdminLogin.value || user.value.id == null || user.value.id!.isEmpty) {
       throw Exception("User not authenticated. Call `checkIsAdminLogin()` first.");
     }
-    return admin.value.id!;
+    return user.value.id!;
   }
 
   Future<String> fetchLocalAuthToken() async {
@@ -122,12 +104,12 @@ class AuthenticationController extends GetxController {
   }
 
   // Fetch user record
-  Future<void> fetchAdmin() async {
+  Future<void> fetchUser() async {
     try {
       final String localAuthUserToken = await fetchLocalAuthToken();
       if (localAuthUserToken.isNotEmpty) { // Check if token is valid
         final userData = await mongoAuthenticationRepository.fetchUserById(userId: localAuthUserToken);
-        admin(userData);
+        user(userData);
       } else{
         throw 'User not found';
       }
@@ -137,11 +119,11 @@ class AuthenticationController extends GetxController {
   }
 
   // Refresh Customer data
-  Future<void> refreshAdmin() async {
+  Future<void> refreshUser() async {
     try {
       isLoading(true);
-      admin(UserModel());
-      await fetchAdmin();
+      user(UserModel());
+      await fetchUser();
     } catch (error) {
       AppMassages.warningSnackBar(title: 'Error', message: error.toString());
     } finally {
@@ -166,7 +148,7 @@ class AuthenticationController extends GetxController {
 
   Future<void> mongoDeleteAccount() async {
     try {
-      await mongoAuthenticationRepository.deleteUser(id: admin.value.id.toString());
+      await mongoAuthenticationRepository.deleteUser(id: user.value.id.toString());
       logout();
     } catch (error) {
       AppMassages.errorSnackBar(title: 'Error', message: error.toString());
@@ -175,11 +157,10 @@ class AuthenticationController extends GetxController {
 
   // this function run after successfully login
   Future<void> login({required UserModel user}) async {
-    admin.value = user; //update user value
+    this.user.value = user; //update user value
     isAdminLogin.value = true; //make user login
     saveLocalAuthToken(user.id!);
     AppMassages.showToastMessage(message: 'Login successfully!'); //show massage for successful login
-    await initializeEcommercePlatformCredentials();
     await Future.delayed(Duration(milliseconds: 300)); // Add delay
     NavigationHelper.navigateToBottomNavigation(); //navigate to other screen
   }
@@ -191,7 +172,7 @@ class AuthenticationController extends GetxController {
       await _auth.signOut();
       deleteLocalAuthToken();
       isAdminLogin.value = false;
-      admin.value = UserModel.empty();
+      user.value = UserModel();
       NavigationHelper.navigateToLoginScreen();
     }
     on FirebaseAuthException catch (error) {

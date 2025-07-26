@@ -51,13 +51,11 @@ class MongoFetch extends MongoDatabase {
   }
 
   // Fetch document by ID
-  Future<Map<String, dynamic>> fetchDocumentById(
-      {required String collectionName, required String id}) async {
+  Future<Map<String, dynamic>> fetchDocumentById({required String collectionName, required String id}) async {
     await _ensureConnected();
     try {
       final objectId = ObjectId.fromHexString(id);
-      var document = await db!.collection(collectionName).findOne(
-          {'_id': objectId});
+      var document = await db!.collection(collectionName).findOne({'_id': objectId});
       if (document == null) {
         throw Exception('Document not found with ID: $id');
       }
@@ -368,41 +366,6 @@ class MongoFetch extends MongoDatabase {
     }
   }
 
-  Future<double> calculateAccountPayable({
-    required String collectionName,
-    Map<String, dynamic>? filter,
-  }) async {
-    await _ensureConnected();
-    try {
-      final pipeline = [
-        {
-          r'$match': filter ?? {},
-        },
-        {
-          r'$group': {
-            '_id': null,
-            'totalBalance': {
-              r'$sum': '\$${UserFieldConstants.balance}',
-            }
-          }
-        }
-      ];
-
-      final result = await db!
-          .collection(collectionName)
-          .aggregateToStream(pipeline)
-          .toList();
-
-      if (result.isNotEmpty && result[0]['totalBalance'] != null) {
-        return (result[0]['totalBalance'] as num).toDouble();
-      } else {
-        return 0.0;
-      }
-    } catch (e) {
-      throw Exception('Failed to calculate total account balance: $e');
-    }
-  }
-
   Future<double> calculateVoucherBalance({
     required String voucherId,
     required String collectionName,
@@ -499,64 +462,6 @@ class MongoFetch extends MongoDatabase {
     }
   }
 
-  Future<double> fetchInTransitStockValue({
-    required String collectionName,
-    required OrderType orderType,
-    required OrderStatus orderStatus,
-  }) async {
-    await _ensureConnected();
-    try {
-      final pipeline = [
-        {
-          "\$match": {
-            OrderFieldName.status: orderStatus.name,
-            OrderFieldName.orderType: orderType.name,
-          }
-        },
-        {
-          "\$unwind": "\$${OrderFieldName.lineItems}"
-        },
-        {
-          "\$match": {
-            "${OrderFieldName.lineItems}.${ProductFieldName.purchasePrice}": {
-              "\$gt": 0
-            },
-            "${OrderFieldName.lineItems}.quantity": {"\$gt": 0}
-          }
-        },
-        {
-          "\$addFields": {
-            "stockValue": {
-              "\$multiply": [
-                "\$${OrderFieldName.lineItems}.quantity",
-                "\$${OrderFieldName.lineItems}.${ProductFieldName
-                    .purchasePrice}"
-              ]
-            }
-          }
-        },
-        {
-          "\$group": {
-            "_id": null,
-            "totalInTransitStockValue": {"\$sum": "\$stockValue"}
-          }
-        }
-      ];
-
-      final result = await db!
-          .collection(collectionName)
-          .aggregateToStream(pipeline)
-          .toList();
-
-      if (result.isNotEmpty && result[0]['totalInTransitStockValue'] != null) {
-        return (result[0]['totalInTransitStockValue'] as num).toDouble();
-      } else {
-        return 0.0;
-      }
-    } catch (e) {
-      throw Exception('Failed to fetch in-transit stock value: $e');
-    }
-  }
 
 
   Future<List<Map<String, dynamic>>> fetchTransactionByEntity({
@@ -607,27 +512,6 @@ class MongoFetch extends MongoDatabase {
     }
   }
 
-
-  Future<Map<String, dynamic>?> fetchTransactionBySale({
-    required String collectionName,
-    required int orderNumber,
-  }) async {
-    await _ensureConnected();
-    try {
-      final query = where
-          .eq(
-          TransactionFieldName.transactionType, AccountVoucherType.sale.name);
-      // .eq(TransactionFieldName.salesIds, orderNumber); // Match sale id in array
-
-      final result = await db!
-          .collection(collectionName)
-          .findOne(query); // use findOne to get a single map
-
-      return result;
-    } catch (e) {
-      throw Exception('Failed to fetch transaction: $e');
-    }
-  }
 
 
   Future<int> fetchNextId(

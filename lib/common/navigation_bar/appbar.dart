@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../features/accounts/screen/search/search/search.dart';
 import '../../features/authentication/controllers/authentication_controller/authentication_controller.dart';
 import '../../features/settings/app_settings.dart';
 import '../../features/settings/screen/setting_screen.dart';
@@ -26,7 +25,6 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget{
     this.toolbarHeight,
     this.showSearchIcon = false,
     this.searchType,
-    this.voucherType,
   });
 
   final String title;
@@ -39,7 +37,6 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget{
   final double? toolbarHeight; // Nullable search type
   final bool showSearchIcon;
   final SearchType? searchType;
-  final AccountVoucherType? voucherType; // Nullable search type
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +54,7 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget{
         if(showSearchIcon)
         IconButton(
             icon: Icon(AppIcons.search),
-            onPressed: () => showSearch(context: context,
-                delegate: SearchVoucher(searchType: searchType!, voucherType: voucherType)
-            )
+            onPressed: () {}
         ),
         if(seeLogoutButton) ...[
           Obx(() => AuthenticationController.instance.isAdminLogin.value

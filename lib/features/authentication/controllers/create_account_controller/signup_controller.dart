@@ -18,11 +18,10 @@ import '../login_controller/login_controller.dart';
 class SignupController extends GetxController{
   static SignupController get instance => Get.find();
 
-  ///variables
+  // Variables
   final localStorage = GetStorage();
   final hidePassword = true.obs; //Observable for hiding/showing password
-  final privacyPolicyChecked = true.obs; //Observable for privacy policy checked or not
-  final fullName = TextEditingController();
+  final name = TextEditingController();
   final email     = TextEditingController();
   final password  = TextEditingController();
   final phone     = TextEditingController();
@@ -34,7 +33,7 @@ class SignupController extends GetxController{
 
   void signupWithEmailPassword() async {
     try {
-      //Start Loading
+      // Start Loading
       FullScreenLoader.openLoadingDialog('We are creating account..', Images.docerAnimation);
       final isConnected = await NetworkManager.instance.isConnected();
       if (!isConnected) {
@@ -45,24 +44,18 @@ class SignupController extends GetxController{
         FullScreenLoader.stopLoading();
         return;
       }
-      //privacy policy check
-      if(!privacyPolicyChecked.value) {
-        AppMassages.warningSnackBar(title: 'Accept Privacy Policy', message: 'In order to create account, you have to read and accept the privacy Policy & Terms of Use.');
-        return;
-      }
 
       UserModel user = UserModel(
-        name: fullName.text.trim(),
+        name: name.text.trim(),
         email: email.text.trim(),
         password: EncryptionHelper.hashPassword(password: password.text.trim()),
         phone: phone.text.trim(),
         dateCreated: DateTime.now(),
-        userType: UserType.admin,
       );
 
       await mongoAuthenticationRepository.singUpWithEmailAndPass(user: user);
 
-      //save to local storage
+      // save to local storage
       if(loginController.rememberMe.value) {
         localStorage.write(LocalStorage.rememberMeEmail, email.text.trim());
         localStorage.write(LocalStorage.rememberMePassword, password.text);
