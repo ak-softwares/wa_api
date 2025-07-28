@@ -14,7 +14,7 @@ class AppSizes {
 
   // Default space of every screen
   static const double defaultRadius = 5;
-  static const double defaultSpace = 12.0;
+  static const double defaultSpace = 10;
   static const double defaultSpaceLg = 30.0;
   static const double defaultBtwTiles = 10.0;
   static const double defaultBorderWidth = 0.2;
@@ -25,7 +25,7 @@ class AppSizes {
   static const double inputFieldPadding = 16.0;
   static const double inputFieldTextSize = 16.0;
   static const FontWeight inputFieldTextWeight = FontWeight.w500;
-  static const double inputFieldRadius = defaultRadius;
+  static const double inputFieldRadius = 30;
   static const double inputFieldSpace = 16.0;
   static const double inputFieldBorderWidth = 1.0;
 
@@ -167,10 +167,10 @@ class AppSizes {
   static const double accountImageWidth = 30.0;
 
   // Chat Tile
-  static const double chatTileHeight = 60;
+  static const double chatTileHeight = 80;
   static const double chatTileWidth = 100.0;
-  static const double chatTileRadius = 5.0;
-  static const double chatImageHeight = 30.0;
+  static const double chatTileRadius = 25.0;
+  static const double chatImageHeight = 46.0;
   static const double chatImageWidth = 30.0;
 
   // Transaction Tile

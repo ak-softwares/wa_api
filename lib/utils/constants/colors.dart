@@ -82,7 +82,7 @@ class AppColors{
 
 
   // Whatsapp color
-  static const Color whatsAppColor = Color(0xFF25D366);
+  static const Color whatsAppColor = Color(0xFF1DA851);
 
   // Error and Validation Colors
   static const Color error = Color(0xFFD32F2F);

@@ -131,6 +131,7 @@ flutter:
     - assets/logos/
     - assets/icons/brands/
     - assets/icons/categories/
+    - assets/images/whatsapp/
     - shorebird.yaml
     - assets/fonts/roboto/Roboto-Regular.ttf
     - assets/fonts/roboto/Roboto-Bold.ttf

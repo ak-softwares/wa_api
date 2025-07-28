@@ -21,10 +21,12 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget{
     this.seeLogoutButton = false,
     this.seeSettingButton = false,
     this.widgetInActions,
+    this.tileWidget,
     this.bottom,
     this.toolbarHeight,
     this.showSearchIcon = false,
     this.searchType,
+    this.titleStyle = const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
   });
 
   final String title;
@@ -33,10 +35,12 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget{
   final bool seeLogoutButton;
   final bool seeSettingButton;
   final Widget? widgetInActions; // Nullable search type
+  final Widget? tileWidget; // Nullable search type
   final PreferredSizeWidget? bottom; // Nullable search type
   final double? toolbarHeight; // Nullable search type
   final bool showSearchIcon;
   final SearchType? searchType;
+  final TextStyle titleStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +51,9 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget{
         statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
       ),
-      title: isShowLogo
-          ? Image(image: AssetImage(isDark ? AppSettings.darkAppLogo : AppSettings.lightAppLogo), height: 34)
-          : Text(title),
+      title: tileWidget ?? (isShowLogo
+            ? Image(image: AssetImage(isDark ? AppSettings.darkAppLogo : AppSettings.lightAppLogo), height: 34)
+            : Text(title, style: titleStyle)),
       actions: [
         if(showSearchIcon)
         IconButton(
