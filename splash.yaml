@@ -1,19 +1,19 @@
 flutter_native_splash:
 
   # Light theme
-  color: "#253440"
-  image: assets/logos/n8nTalk.png
+  color: "#FFFFFF"
+  image: assets/logos/wa_api.png
 
   # Dark theme
-  color_dark: "#253440"
-  image_dark: assets/logos/n8nTalk.png
+  color_dark: "#FFFFFF"
+  image_dark: assets/logos/wa_api.png
 
   android_12:
-    color: "#253440"
-    image: assets/logos/n8nTalk.png
+    color: "#FFFFFF"
+    image: assets/logos/wa_api.png
 
-    color_dark: "#253440"
-    image_dark: assets/logos/n8nTalk.png
+    color_dark: "#FFFFFF"
+    image_dark: assets/logos/wa_api.png
 
   web: false
 

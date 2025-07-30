@@ -1,8 +1,9 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:n8nTalk/common/widgets/custom_shape/containers/rounded_container.dart';
-import 'package:n8nTalk/common/widgets/shimmers/shimmer_effect.dart';
 
+
+import '../../../../../common/widgets/custom_shape/containers/rounded_container.dart';
+import '../../../../../common/widgets/shimmers/shimmer_effect.dart';
 import '../../../../../utils/constants/sizes.dart';
 
 class ChatSimmer extends StatelessWidget {

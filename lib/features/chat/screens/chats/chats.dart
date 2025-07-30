@@ -25,7 +25,7 @@ class Chats extends StatelessWidget {
           children: [
             IconButton(
               icon: Icon(Icons.qr_code_scanner_outlined),
-              onPressed: () {},
+              onPressed: () { },
             ),
             IconButton(
               onPressed: () {},

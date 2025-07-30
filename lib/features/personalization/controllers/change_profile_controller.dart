@@ -69,7 +69,7 @@ class ChangeProfileController extends GetxController {
       auth.user(updatedUser);
 
       // update email to local storage too
-      localStorage.write(LocalStorage.rememberMeEmail, email.text.trim());
+      localStorage.write(LocalStorageName.rememberMeEmail, email.text.trim());
 
       //remove Loader
       FullScreenLoader.stopLoading();

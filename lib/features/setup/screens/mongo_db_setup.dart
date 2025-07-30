@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:n8nTalk/utils/constants/sizes.dart';
 
 import '../../../common/navigation_bar/appbar.dart';
 import '../../../common/styles/spacing_style.dart';
+import '../../../utils/constants/sizes.dart';
 import '../../../utils/validators/validation.dart';
 import '../controllers/mongo_db_setup.dart';
 

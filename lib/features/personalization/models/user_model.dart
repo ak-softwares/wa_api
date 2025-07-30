@@ -68,4 +68,49 @@ class UserModel {
 
     return map;
   }
+
+  factory UserModel.fromJsonForLocal(Map<String, dynamic> json) {
+
+    return UserModel(
+      id: json[UserFieldConstants.id] is ObjectId
+          ? (json[UserFieldConstants.id] as ObjectId).toHexString() // Convert ObjectId to string
+          : json[UserFieldConstants.id]?.toString(), // Fallback to string if not ObjectId
+      email: json[UserFieldConstants.email],
+      password: json[UserFieldConstants.password],
+      name: json[UserFieldConstants.name],
+      phone: json[UserFieldConstants.phone] ?? (json[UserFieldConstants.address]?[UserFieldConstants.phone] ?? ''),
+      address: AddressModel.fromJson(json[UserFieldConstants.address] ?? {}),
+      dateCreated: json[UserFieldConstants.dateCreated] != null
+          ? DateTime.parse(json[UserFieldConstants.dateCreated])
+          : null,
+      dateModified: json[UserFieldConstants.dateModified] != null
+          ? DateTime.parse(json[UserFieldConstants.dateModified])
+          : null,
+      fCMToken: json[UserFieldConstants.fCMToken],
+      mongoDbCredentials: json[UserFieldConstants.mongoDbCredentials] != null
+          ? MongoDbCredentials.fromJson(json[UserFieldConstants.mongoDbCredentials])
+          : null,
+
+    );
+  }
+
+  Map<String, dynamic> toMapForLocal() {
+    final map = <String, dynamic>{};
+
+    void addIfNotNull(String key, dynamic value) {
+      if (value != null) map[key] = value;
+    }
+
+    addIfNotNull(UserFieldConstants.id, id);
+    addIfNotNull(UserFieldConstants.email, email);
+    addIfNotNull(UserFieldConstants.name, name);
+    addIfNotNull(UserFieldConstants.password, password);
+    addIfNotNull(UserFieldConstants.phone, phone);
+    // addIfNotNull(UserFieldConstants.address, address?.toMap()); // Assuming address has toJson()
+    addIfNotNull(UserFieldConstants.dateCreated, dateCreated?.toIso8601String());
+    addIfNotNull(UserFieldConstants.dateModified, dateModified?.toIso8601String());
+    addIfNotNull(UserFieldConstants.mongoDbCredentials, mongoDbCredentials?.toJson());
+
+    return map;
+  }
 }

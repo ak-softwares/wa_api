@@ -29,6 +29,7 @@ class Messages extends StatelessWidget {
 
 
     scrollController.addListener(() async {
+      if (controller.messages.length < 10) return; // Exit early if not enough messages
       if (scrollController.position.extentAfter < 0.2 * scrollController.position.maxScrollExtent) {
         if (!controller.isLoadingMore.value && controller.hasMoreMessages.value) {
           controller.isLoadingMore(true);

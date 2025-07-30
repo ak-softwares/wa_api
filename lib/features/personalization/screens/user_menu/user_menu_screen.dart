@@ -19,48 +19,31 @@ class UserMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final userController = Get.put(AuthenticationController());
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      userController.refreshUser();
-    });
-
-    return  Obx(() => Scaffold(
+    return Scaffold(
         appBar: const AppAppBar(title: 'Profile Setting', seeLogoutButton: true, seeSettingButton: true,),
-        body: !userController.isAdminLogin.value
-            ? const CheckLoginScreen()
-            : RefreshIndicator(
-                color: AppColors.refreshIndicator,
-                onRefresh: () async => userController.refreshUser(),
-                child: ListView(
-                  // crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+        body: ListView(
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
 
-                    // User profile
-                    Heading(title: 'Your profile', paddingLeft: AppSizes.defaultSpace),
-                    CustomerProfileCard(userController: userController, showHeading: true),
+            // Menu
+            Heading(title: 'Menu', paddingLeft: AppSizes.defaultSpace),
+            const Menu(),
 
-                    // Menu
-                    Heading(title: 'Menu', paddingLeft: AppSizes.defaultSpace),
-                    const Menu(),
+            // Contacts
+            SupportWidget(),
 
-                    // Contacts
-                    SupportWidget(),
-
-                    // Version
-                    Center(
-                      child: Column(
-                        children: [
-                          Text('n8nTalk', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),),
-                          Text('v${AppSettings.appVersion}', style: TextStyle(fontSize: 12),)
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: AppSizes.md),
-                  ],
-                ),
+            // Version
+            Center(
+              child: Column(
+                children: [
+                  Text('n8nTalk', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),),
+                  Text('v${AppSettings.appVersion}', style: TextStyle(fontSize: 12),)
+                ],
+              ),
             ),
-      ),
+            const SizedBox(height: AppSizes.md),
+          ],
+        ),
     );
   }
 }

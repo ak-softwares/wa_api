@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../common/dialog_box_massages/dialog_massage.dart';
 import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
@@ -23,7 +26,7 @@ class AuthenticationController extends GetxController {
   RxBool isLoading = false.obs;
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
   RxBool isAdminLogin = false.obs;
-  final int loginExpiryInDays = 30;
+  final int loginExpiryInDays = 90;
 
   final localStorage = GetStorage();
   Rx<UserModel> user = UserModel().obs;
@@ -49,7 +52,7 @@ class AuthenticationController extends GetxController {
     final String localAuthUserToken = await fetchLocalAuthToken();
     if (localAuthUserToken.isNotEmpty) {
       isAdminLogin.value = true;
-      user.value = UserModel(id: localAuthUserToken);
+      user.value = await loadUserFromLocal() ?? UserModel();
     }
   }
 
@@ -70,8 +73,8 @@ class AuthenticationController extends GetxController {
   }
 
   Future<String> fetchLocalAuthToken() async {
-    final String? authToken = await secureStorage.read(key: LocalStorage.authUserID);
-    final String? expiryString = await secureStorage.read(key: LocalStorage.loginExpiry);
+    final String? authToken = await secureStorage.read(key: LocalStorageName.authUserID);
+    final String? expiryString = await secureStorage.read(key: LocalStorageName.loginExpiry);
 
     // Check if both values exist
     if (authToken == null || authToken.isEmpty || expiryString == null || expiryString.isEmpty) {
@@ -94,13 +97,14 @@ class AuthenticationController extends GetxController {
   Future<void> saveLocalAuthToken(String token) async {
     // Store user ID and login expiry
     final String expiry = DateTime.now().add(Duration(days: loginExpiryInDays)).toIso8601String();
-    await secureStorage.write(key: LocalStorage.authUserID, value: token);
-    await secureStorage.write(key: LocalStorage.loginExpiry, value: expiry);
+    await secureStorage.write(key: LocalStorageName.authUserID, value: token);
+    await secureStorage.write(key: LocalStorageName.loginExpiry, value: expiry);
   }
 
   Future<void> deleteLocalAuthToken() async {
-    await secureStorage.delete(key: LocalStorage.authUserID);
-    await secureStorage.delete(key: LocalStorage.loginExpiry);
+    await secureStorage.delete(key: LocalStorageName.authUserID);
+    await secureStorage.delete(key: LocalStorageName.loginExpiry);
+    // localStorage.remove(LocalStorageName.userData);
   }
 
   // Fetch user record
@@ -160,7 +164,7 @@ class AuthenticationController extends GetxController {
     this.user.value = user; //update user value
     isAdminLogin.value = true; //make user login
     saveLocalAuthToken(user.id!);
-    AppMassages.showToastMessage(message: 'Login successfully!'); //show massage for successful login
+    await saveUserFromLocal(user);
     await Future.delayed(Duration(milliseconds: 300)); // Add delay
     NavigationHelper.navigateToBottomNavigation(); //navigate to other screen
   }
@@ -187,6 +191,24 @@ class AuthenticationController extends GetxController {
     catch (error) {
       throw 'Something went wrong. Please try again $error';
     }
+  }
+
+
+  Future<void> saveUserFromLocal(UserModel user) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = jsonEncode(user.toMapForLocal());
+    await prefs.setString(LocalStorageName.userData, userJson);
+  }
+
+  Future<UserModel?> loadUserFromLocal() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = prefs.getString(LocalStorageName.userData);
+
+    if (userJson != null) {
+      final Map<String, dynamic> jsonMap = jsonDecode(userJson);
+      return UserModel.fromJsonForLocal(jsonMap);
+    }
+    return null;
   }
 
 }

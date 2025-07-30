@@ -57,8 +57,8 @@ class SignupController extends GetxController{
 
       // save to local storage
       if(loginController.rememberMe.value) {
-        localStorage.write(LocalStorage.rememberMeEmail, email.text.trim());
-        localStorage.write(LocalStorage.rememberMePassword, password.text);
+        localStorage.write(LocalStorageName.rememberMeEmail, email.text.trim());
+        localStorage.write(LocalStorageName.rememberMePassword, password.text);
       }
 
       FullScreenLoader.stopLoading();

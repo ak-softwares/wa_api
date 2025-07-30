@@ -30,12 +30,12 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     // Read email from local storage
-    String? rememberedEmail = localStorage.read(LocalStorage.rememberMeEmail);
+    String? rememberedEmail = localStorage.read(LocalStorageName.rememberMeEmail);
     if (rememberedEmail != null) {
       email.text = rememberedEmail;
     }
     // Read password from local storage
-    String? rememberedPassword = localStorage.read(LocalStorage.rememberMePassword);
+    String? rememberedPassword = localStorage.read(LocalStorageName.rememberMePassword);
     if (rememberedPassword != null) {
       password.text = rememberedPassword;
     }
@@ -57,8 +57,8 @@ class LoginController extends GetxController {
 
       //save to local storage
       if (rememberMe.value) {
-        localStorage.write(LocalStorage.rememberMeEmail, email.text.trim());
-        localStorage.write(LocalStorage.rememberMePassword, password.text);
+        localStorage.write(LocalStorageName.rememberMeEmail, email.text.trim());
+        localStorage.write(LocalStorageName.rememberMePassword, password.text);
       }
       userController.login(user: user);
     } catch (error) {

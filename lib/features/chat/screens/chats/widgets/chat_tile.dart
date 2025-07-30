@@ -1,10 +1,9 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:n8nTalk/common/widgets/custom_shape/containers/rounded_container.dart';
-import 'package:n8nTalk/common/widgets/custom_shape/image/circular_image.dart';
-import 'package:n8nTalk/utils/constants/colors.dart';
 
 import '../../../../../common/styles/spacing_style.dart';
+import '../../../../../common/widgets/custom_shape/containers/rounded_container.dart';
+import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../models/chats_model.dart';
 
@@ -59,7 +58,7 @@ class ChatTile extends StatelessWidget {
                     if (chat.messages?.last.type == 'ai')
                       Row(
                         children: [
-                          Icon(Icons.keyboard_double_arrow_right_sharp, size: 16, color: Colors.blue),
+                          Icon(Icons.done_all, size: 16, color: Colors.blue),
                           const SizedBox(width: 3),
                         ],
                       ),

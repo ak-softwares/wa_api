@@ -668,7 +668,6 @@ class MongoFetch extends MongoDatabase {
   }
 
 
-
   // Products
   Future<Map<String, dynamic>?> fetchProductByIdWithStock({
     required String productCollectionName,
