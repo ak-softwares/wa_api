@@ -15,6 +15,7 @@ import 'firebase_options.dart';
 import 'utils/theme/ThemeController.dart';
 import 'utils/theme/theme.dart';
 
+// Theme.of(context).colorScheme.outline
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

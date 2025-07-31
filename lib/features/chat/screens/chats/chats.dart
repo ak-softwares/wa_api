@@ -18,6 +18,20 @@ class Chats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ChatsController());
+    final ScrollController scrollController = ScrollController();
+
+    scrollController.addListener(() async {
+      if (controller.chats.length < 10) return; // Exit early if not enough messages
+      if (scrollController.position.extentAfter < 0.2 * scrollController.position.maxScrollExtent) {
+        print('=========${controller.hasMoreChats.value}');
+        if (!controller.isLoadingMore.value && controller.hasMoreChats.value) {
+          controller.isLoadingMore(true);
+          controller.currentPage++;
+          await controller.getChats();
+          controller.isLoadingMore(false);
+        }
+      }
+    });
 
     return Scaffold(
       appBar: AppAppBar(title: 'WhatsApp API', titleStyle: TextStyle(color: AppColors.whatsAppColor, fontSize: 20),
@@ -42,6 +56,8 @@ class Chats extends StatelessWidget {
         color: AppColors.refreshIndicator,
         onRefresh: () async => controller.refreshChats(),
         child: ListView(
+          controller: scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: AppSpacingStyle.defaultPageHorizontal,
           children: [
             SearchField(),
@@ -68,19 +84,38 @@ class Chats extends StatelessWidget {
               }
               else {
                 return GridLayout(
-                    itemCount: controller.chats.length,
+                    itemCount: controller.isLoadingMore.value ? controller.chats.length + 1 : controller.chats.length,
                     crossAxisCount: 1,
                     mainAxisExtent: AppSizes.chatTileHeight,
                     mainAxisSpacing: 0,
                     crossAxisSpacing: 0,
                     itemBuilder: (context, index) {
-                      return ChatTile(
-                          chat: controller.chats[index],
-                          onTap: () => Get.to(() => Messages(
-                            sessionId: controller.chats[index].sessionId,
-                            messages: controller.chats[index].messages,
-                          ))
-                      );
+                      if (index < controller.chats.length) {
+                        return ChatTile(
+                            chat: controller.chats[index],
+                            onTap: () =>
+                                Get.to(() =>
+                                    Messages(
+                                      sessionId: controller.chats[index]
+                                          .sessionId,
+                                      messages: controller.chats[index]
+                                          .messages,
+                                    ))
+                        );
+                      } else {
+                        return Column(
+                          children: [
+                            Center(
+                              child: SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: CircularProgressIndicator(color: Colors.grey.withOpacity(0.5), strokeWidth: 2),
+                              ),
+                            ),
+                            SizedBox(height: 10,),
+                          ],
+                        );
+                      }
                     }
                 );
               }

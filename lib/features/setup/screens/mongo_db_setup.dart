@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 
 import '../../../common/navigation_bar/appbar.dart';
 import '../../../common/styles/spacing_style.dart';
+import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/sizes.dart';
 import '../../../utils/validators/validation.dart';
 import '../controllers/mongo_db_setup.dart';
@@ -27,9 +28,20 @@ class MongoDBSetup extends StatelessWidget {
               TextFormField(
                   controller: controller.connectionString,
                   validator: (value) => Validator.validateEmptyText(fieldName: 'Connection String', value: value),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     prefixIcon: Icon(Iconsax.direct_right),
                     labelText: 'Connection String*',
+                    // Default border (used when not focused)
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                    ),
+
+                    // Border when focused
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                    ),
                   )
               ),
 
@@ -37,9 +49,20 @@ class MongoDBSetup extends StatelessWidget {
               TextFormField(
                   controller: controller.dataBaseName,
                   validator: (value) => Validator.validateEmptyText(fieldName: 'Database Name', value: value),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     prefixIcon: Icon(Iconsax.direct_right),
                     labelText: 'Database Name*',
+                    // Default border (used when not focused)
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                    ),
+
+                    // Border when focused
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                    ),
                   )
               ),
 
@@ -48,9 +71,20 @@ class MongoDBSetup extends StatelessWidget {
                   controller: controller.collectionName,
                   validator: (value) => Validator
                       .validateEmptyText(fieldName: 'Collection Name', value: value),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     prefixIcon: Icon(Iconsax.direct_right),
                     labelText: 'Collection Name*',
+                    // Default border (used when not focused)
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                    ),
+
+                    // Border when focused
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                    ),
                   )
               ),
 

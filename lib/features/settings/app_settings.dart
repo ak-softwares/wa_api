@@ -7,7 +7,7 @@ import '../authentication/controllers/authentication_controller/authentication_c
 
 class AppSettings {
 
-  static const String appName             =  'aramarket.in';
+  static const String appName             =  'WA API';
   static const String subTitle            =  'Wholesale Market Place';
 
   static const String appCurrency         =  'INR';

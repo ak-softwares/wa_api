@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../utils/constants/colors.dart';
+
 class MessageBubble extends StatelessWidget {
   final String message;
   final String time;
@@ -14,6 +16,8 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Stack(
@@ -23,7 +27,9 @@ class MessageBubble extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
             decoration: BoxDecoration(
-              color: isMe ? const Color(0xFFDCF8C6) : const Color(0xFFffffff),
+              color: isMe
+                  ? isDark ? AppColors.messageBubbleIsMeSurfaceDark : AppColors.messageBubbleIsMeSurfaceLight
+                  : isDark ? AppColors.messageBubbleIsYouSurfaceDark : AppColors.messageBubbleIsYouSurfaceLight,
               borderRadius: BorderRadius.only(
                 topLeft: isMe ? const Radius.circular(12) : Radius.zero,
                 bottomLeft: const Radius.circular(12),
@@ -35,7 +41,7 @@ class MessageBubble extends StatelessWidget {
               children: [
                 RichText(
                   text: TextSpan(
-                    style: const TextStyle(fontSize: 16, color: Colors.black),
+                    style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
                     children: [
                       TextSpan(text: message),
                       WidgetSpan(child: SizedBox(width: 70)),
@@ -66,8 +72,9 @@ class MessageBubble extends StatelessWidget {
                 height: 8,
                 width: 8,
                 decoration: BoxDecoration(
-                  color: isMe ? const Color(0xFFDCF8C6) : const Color(0xFFffffff),
-                  borderRadius: const BorderRadius.only(
+                  color: isMe
+                      ? isDark ? AppColors.messageBubbleIsMeSurfaceDark : AppColors.messageBubbleIsMeSurfaceLight
+                      : isDark ? AppColors.messageBubbleIsYouSurfaceDark : AppColors.messageBubbleIsYouSurfaceLight,                  borderRadius: const BorderRadius.only(
                     bottomRight: Radius.circular(50),
                     topRight: Radius.zero
                   ),
@@ -82,8 +89,9 @@ class MessageBubble extends StatelessWidget {
                   height: 8,
                   width: 8,
                   decoration: BoxDecoration(
-                    color: isMe ? const Color(0xFFDCF8C6) : const Color(0xFFffffff),
-                    borderRadius: const BorderRadius.only(
+                    color: isMe
+                        ? isDark ? AppColors.messageBubbleIsMeSurfaceDark : AppColors.messageBubbleIsMeSurfaceLight
+                        : isDark ? AppColors.messageBubbleIsYouSurfaceDark : AppColors.messageBubbleIsYouSurfaceLight,                    borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(50),
                         topRight: Radius.zero
                     ),

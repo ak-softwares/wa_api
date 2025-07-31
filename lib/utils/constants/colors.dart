@@ -2,8 +2,49 @@ import 'package:flutter/material.dart';
 
 import '../../features/settings/app_settings.dart';
 
+// Theme.of(context).colorScheme.outline
 class AppColors{
   AppColors._();
+
+  // #0B1014 for header black
+
+
+  // #24BF64 for text green dark
+  // #D8FDD2 for text green light
+
+  // #C71843 for text red dark
+  // #D7093A for text red light
+
+  // Message Colors
+  static const Color messageBackgroundLight = Color(0xFFF5F2EB);
+  static const Color messageBackgroundDark = Color(0xFF0B1014);
+
+  // Message Bubble Colors
+  static const Color messageBubbleIsMeSurfaceLight = Color(0xFFD8FDD2);
+  static const Color messageBubbleIsMeSurfaceDark = Color(0xFF134D37);
+
+  // Message Bubble Colors
+  static const Color messageBubbleIsYouSurfaceLight = Color(0xFFFFFFFF);
+  static const Color messageBubbleIsYouSurfaceDark = Color(0xFF1F272A);
+
+  // Message Send Input Background
+  static const Color messageSendInputBackgroundLight = Color(0xFFFFFFFF);
+  static const Color messageSendInputBackgroundDark = Color(0xFF1F272A);
+
+  // Message Send Input Caption
+  static const Color messageSendInputCaptionLight = Color(0xFF5B6268);
+  static const Color messageSendInputCaptionDark = Color(0xFF8D9598);
+
+  // Message Send Button
+  static const Color messageSendButtonLight = Color(0xFF1DAB61);
+  static const Color messageSendButtonDark = Color(0xFF21C063);
+
+  // Input Border Color
+  static const Color inputFieldBorderColor = Color(0xFF21C063);
+
+
+
+
 
   // App Basic Colors
   static const Color primaryColor = AppSettings.primaryColor;

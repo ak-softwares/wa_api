@@ -35,7 +35,7 @@ class AppSizes {
   static const double buttonPadding = 16.0;
   static const double buttonTextSize = 16.0;
   static const FontWeight buttonTextWeight = FontWeight.w500;
-  static const double buttonRadius = defaultRadius;
+  static const double buttonRadius = 30;
   static const double buttonElevation = 4.0;
   static const double buttonBorderWidth = 1.0;
 

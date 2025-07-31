@@ -17,6 +17,7 @@ class ChatsController extends GetxController {
   RxInt currentPage = 1.obs;
   RxBool isLoading = false.obs;
   RxBool isLoadingMore = false.obs;
+  RxBool hasMoreChats = true.obs;
   RxList<ChatModel> chats = <ChatModel>[].obs;
 
   final chatsRepository = Get.put(ChatsRepository());
@@ -32,9 +33,11 @@ class ChatsController extends GetxController {
   // Get all chats
   Future<void> getChats() async {
     try {
-      final List<ChatModel> fetchedChats =
-          await chatsRepository.fetchAllChats(page: currentPage.value);
-      chats.addAll(fetchedChats);
+      final List<ChatModel> newChats = await chatsRepository.fetchAllChats(page: currentPage.value);
+      if (newChats.isEmpty || newChats.length < 10) {
+        hasMoreChats(false); // No more messages to load
+      }
+      chats.addAll(newChats);
     } catch (e) {
       AppMassages.errorSnackBar(title: 'Error', message: e.toString());
     }
@@ -44,6 +47,7 @@ class ChatsController extends GetxController {
   Future<void> refreshChats() async {
     try {
       isLoading(true);
+      hasMoreChats(true); // No more messages to load
       currentPage.value = 1; // Reset page number
       chats.clear(); // Clear existing orders
       await getChats();

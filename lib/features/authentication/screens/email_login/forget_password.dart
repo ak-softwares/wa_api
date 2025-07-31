@@ -48,9 +48,20 @@ class ForgetPasswordScreen extends StatelessWidget {
                         TextFormField(
                             controller: controller.email,
                             validator: (value) => Validator.validateEmail(value),
-                            decoration: const InputDecoration(
-                                prefixIcon: Icon(Iconsax.direct_right),
-                                labelText: AppTexts.email
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Iconsax.direct_right),
+                              labelText: AppTexts.email,
+                              // Default border (used when not focused)
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                              ),
+
+                              // Border when focused
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                              ),
                             )
                         ),
                         // Forget password button

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../utils/constants/sizes.dart';
+import '../../../controllers/search/search_delegate.dart';
 
 class SearchField extends StatelessWidget {
   const SearchField({super.key, this.searchText = "Search"});
@@ -10,7 +11,7 @@ class SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      // onTap: () => showSearch(context: context, delegate: TSearchDelegate()),
+      onTap: () => showSearch(context: context, delegate: AppSearchDelegate()),
       child: Container(
         height: 45,
         padding: const EdgeInsets.all(AppSizes.sm),

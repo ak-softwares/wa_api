@@ -36,7 +36,7 @@ class UserMenuScreen extends StatelessWidget {
             Center(
               child: Column(
                 children: [
-                  Text('n8nTalk', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),),
+                  Text(AppSettings.appName, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),),
                   Text('v${AppSettings.appVersion}', style: TextStyle(fontSize: 12),)
                 ],
               ),

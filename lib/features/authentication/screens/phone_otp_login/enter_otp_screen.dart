@@ -43,7 +43,7 @@ class EnterOTPScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
                 const SizedBox(height: AppSizes.spaceBtwItems),
 
-                //Phone number
+                // Phone number
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -68,7 +68,7 @@ class EnterOTPScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSizes.spaceBtwSection),
 
-                //Otp Input field
+                // Otp Input field
                 SizedBox(
                   width: 250,
                   child: PinFieldAutoFill(

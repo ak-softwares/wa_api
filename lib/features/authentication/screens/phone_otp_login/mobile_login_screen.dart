@@ -46,8 +46,19 @@ class MobileLoginScreen extends StatelessWidget {
                 // PhoneFieldHint(),
                 // Phone number field with auto-fill
                 IntlPhoneField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Phone Number',
+                    // Default border (used when not focused)
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                    ),
+
+                    // Border when focused
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                    ),
                   ),
                   validator: (value) => Validator.validatePhoneNumber(value.toString()),
                   languageCode: "en",

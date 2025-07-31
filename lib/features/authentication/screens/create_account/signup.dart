@@ -40,16 +40,41 @@ class SignUpScreen extends StatelessWidget {
                         TextFormField(
                           controller: controller.name,
                           validator: (value) => Validator.validateEmptyText(fieldName: 'Name', value: value),
-                          decoration: const InputDecoration(prefixIcon: Icon(Iconsax.user), labelText: 'Name'),
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Iconsax.user),
+                            labelText: 'Name',
+                            // Default border (used when not focused)
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                              borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                            ),
+
+                            // Border when focused
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                              borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                            ),
+                          ),
                         ),
 
                         // Email
                         TextFormField(
                             controller: controller.email,
                             validator: (value) => Validator.validateEmail(value),
-                            decoration: const InputDecoration(
-                                prefixIcon: Icon(Iconsax.direct_right),
-                                labelText: AppTexts.email
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Iconsax.direct_right),
+                              labelText: AppTexts.email,
+                              // Default border (used when not focused)
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                              ),
+
+                              // Border when focused
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                              ),
                             )
                         ),
 
@@ -60,12 +85,24 @@ class SignUpScreen extends StatelessWidget {
                               validator: (value) => Validator.validatePassword(value),
                               obscureText: controller.hidePassword.value,
                               decoration: InputDecoration(
-                                  prefixIcon: const Icon(Iconsax.password_check),
-                                  labelText: AppTexts.password,
-                                  suffixIcon: IconButton(
-                                    onPressed: () => controller.hidePassword.value = !controller.hidePassword.value,
-                                    icon: controller.hidePassword.value ? const Icon(Iconsax.eye_slash) : const Icon(Iconsax.eye),
-                                  )
+                                prefixIcon: const Icon(Iconsax.password_check),
+                                labelText: AppTexts.password,
+                                suffixIcon: IconButton(
+                                  onPressed: () => controller.hidePassword.value = !controller.hidePassword.value,
+                                  icon: controller.hidePassword.value ? const Icon(Iconsax.eye_slash) : const Icon(Iconsax.eye),
+                                ),
+                                // Default border (used when not focused)
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                                ),
+
+                                // Border when focused
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                                ),
+
                               )
                         )),
 
@@ -73,9 +110,20 @@ class SignUpScreen extends StatelessWidget {
                         TextFormField(
                             controller: controller.phone,
                             validator: (value) => Validator.validatePhoneNumber(value),
-                            decoration: const InputDecoration(
-                                prefixIcon: Icon(Iconsax.call),
-                                labelText: AppTexts.phone
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Iconsax.call),
+                              labelText: AppTexts.phone,
+                              // Default border (used when not focused)
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                              ),
+
+                              // Border when focused
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                              ),
                             )
                         ),
 

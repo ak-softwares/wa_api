@@ -5,11 +5,12 @@ import 'package:get/get.dart';
 import '../../../../common/navigation_bar/appbar.dart';
 import '../../../../common/styles/spacing_style.dart';
 import '../../../../common/widgets/custom_shape/containers/rounded_container.dart';
+import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../controllers/messages/messages_controller.dart';
 import '../../models/message_model.dart';
-import '../input_bar/input_bar.dart';
-import 'widgets/message_bubbel.dart';
+import 'widgets/input_bar.dart';
+import 'widgets/message_bubble.dart';
 
 class Messages extends StatelessWidget {
   const Messages({super.key, required this.sessionId, this.messages});
@@ -26,7 +27,7 @@ class Messages extends StatelessWidget {
     const double chatTileHeight = AppSizes.chatTileHeight;
     const double chatImageHeight = AppSizes.chatImageHeight;
     const double chatTileRadius = AppSizes.chatTileRadius;
-
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     scrollController.addListener(() async {
       if (controller.messages.length < 10) return; // Exit early if not enough messages
@@ -40,8 +41,8 @@ class Messages extends StatelessWidget {
       }
     });
 
-
     return Scaffold(
+      backgroundColor: isDark ? AppColors.messageBackgroundDark : AppColors.messageBackgroundLight,
       appBar: AppAppBar(
         tileWidget: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -91,10 +92,24 @@ class Messages extends StatelessWidget {
       body: Stack(
         children: [
           // Background
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/whatsapp/whatsapp_doodle_pattern.jpg',
-              fit: BoxFit.cover,
+          Opacity(
+            opacity: 0.1,
+            child: Positioned.fill(
+              child: ColorFiltered(
+                colorFilter: !isDark
+                    ? const ColorFilter.matrix(<double>
+                          [
+                            -1, 0, 0, 0, 255, // Red
+                            0, -1, 0, 0, 255, // Green
+                            0, 0, -1, 0, 255, // Blue
+                            0, 0, 0, 1, 0,   // Alpha
+                          ])
+                    : const ColorFilter.mode(
+                        Colors.transparent,
+                        BlendMode.dst, // No change
+                      ),
+                child: Image.asset('assets/images/whatsapp/whatsapp_doodle_pattern.png', fit: BoxFit.cover),
+              ),
             ),
           ),
 
