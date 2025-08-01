@@ -7,6 +7,14 @@ class AppFormatter {
     return DateFormat('dd/MM').format(date); // e.g., 01/06
   }
 
+  static String formatDateAsTime(DateTime? date) {
+    if (date == null) {
+      return '';
+    }
+    return DateFormat.jm().format(date.toLocal()); // Converts UTC to local
+  }
+
+
   static String formatDate(DateTime? date) {
     if(date == null){
       return '';

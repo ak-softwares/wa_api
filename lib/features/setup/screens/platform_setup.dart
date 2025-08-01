@@ -5,6 +5,7 @@ import '../../../common/navigation_bar/appbar.dart';
 import '../../../common/widgets/custom_shape/image/circular_image.dart';
 import '../../../utils/constants/sizes.dart';
 import '../../authentication/controllers/authentication_controller/authentication_controller.dart';
+import 'fb_api_setup.dart';
 import 'mongo_db_setup.dart';
 import 'n8n_setup.dart';
 
@@ -23,10 +24,17 @@ class PlatformSelectionScreen extends StatelessWidget {
           children: [
             SizedBox(height: AppSizes.md),
             _PlatformCard(
-              name: 'MongoDB',
-              image: 'assets/images/setup_logos/mongo_db.png',
-              color: Colors.blue,
-              onTap: () => Get.to(() => MongoDBSetup())
+                name: 'MongoDB',
+                image: 'assets/images/setup_logos/mongo_db.png',
+                color: Colors.blue,
+                onTap: () => Get.to(() => MongoDBSetup())
+            ),
+            SizedBox(height: AppSizes.md),
+            _PlatformCard(
+                name: 'Facebook API Console',
+                image: 'assets/images/setup_logos/facebook_logo.png',
+                color: Colors.blue,
+                onTap: () => Get.to(() => FBApiSetup())
             ),
             SizedBox(height: AppSizes.md),
             _PlatformCard(

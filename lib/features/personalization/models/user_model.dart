@@ -1,6 +1,7 @@
 import 'package:mongo_dart/mongo_dart.dart';
 
 import '../../../utils/constants/db_constants.dart';
+import '../../setup/models/fb_api_credentials.dart';
 import '../../setup/models/mongo_db_credentials.dart';
 import 'address_model.dart';
 
@@ -15,6 +16,7 @@ class UserModel {
   DateTime? dateModified;
   String? fCMToken;
   MongoDbCredentials? mongoDbCredentials;
+  FBApiCredentials? fBApiCredentials;
 
   UserModel({
     this.id,
@@ -26,7 +28,8 @@ class UserModel {
     this.dateCreated,
     this.dateModified,
     this.fCMToken,
-    this.mongoDbCredentials
+    this.mongoDbCredentials,
+    this.fBApiCredentials,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -45,6 +48,9 @@ class UserModel {
       fCMToken: json[UserFieldConstants.fCMToken],
       mongoDbCredentials: json[UserFieldConstants.mongoDbCredentials] != null
           ? MongoDbCredentials.fromJson(json[UserFieldConstants.mongoDbCredentials])
+          : null,
+      fBApiCredentials: json[UserFieldConstants.fBApiCredentials] != null
+          ? FBApiCredentials.fromJson(json[UserFieldConstants.fBApiCredentials])
           : null,
 
     );
@@ -65,6 +71,7 @@ class UserModel {
     addIfNotNull(UserFieldConstants.dateCreated, dateCreated);
     addIfNotNull(UserFieldConstants.dateModified, dateModified);
     addIfNotNull(UserFieldConstants.mongoDbCredentials, mongoDbCredentials?.toJson());
+    addIfNotNull(UserFieldConstants.fBApiCredentials, fBApiCredentials?.toJson());
 
     return map;
   }
@@ -90,6 +97,9 @@ class UserModel {
       mongoDbCredentials: json[UserFieldConstants.mongoDbCredentials] != null
           ? MongoDbCredentials.fromJson(json[UserFieldConstants.mongoDbCredentials])
           : null,
+      fBApiCredentials: json[UserFieldConstants.fBApiCredentials] != null
+          ? FBApiCredentials.fromJson(json[UserFieldConstants.fBApiCredentials])
+          : null,
 
     );
   }
@@ -110,6 +120,7 @@ class UserModel {
     addIfNotNull(UserFieldConstants.dateCreated, dateCreated?.toIso8601String());
     addIfNotNull(UserFieldConstants.dateModified, dateModified?.toIso8601String());
     addIfNotNull(UserFieldConstants.mongoDbCredentials, mongoDbCredentials?.toJson());
+    addIfNotNull(UserFieldConstants.fBApiCredentials, fBApiCredentials?.toJson());
 
     return map;
   }

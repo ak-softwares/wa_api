@@ -58,7 +58,7 @@ class UserMongoFetch extends UsersMongoDatabase {
 
     try {
       var query = where
-        ..sortBy('_id', descending: true)
+        ..sortBy(ChatsFieldName.id, descending: true)
         ..skip(skip)
         ..limit(itemsPerPage);
 
@@ -70,12 +70,22 @@ class UserMongoFetch extends UsersMongoDatabase {
 
       var documents = await collection.find(query).toList();
 
-      // If documents have a 'messages' array, trim it
       for (var doc in documents) {
-        if (doc.containsKey('messages') && doc['messages'] is List) {
-          List messages = doc['messages'];
-          int startIndex = messages.length > messageLimit ? messages.length - messageLimit : 0;
-          doc['messages'] = messages.sublist(startIndex);
+        if (doc.containsKey(ChatsFieldName.messages) && doc[ChatsFieldName.messages] is List) {
+          List messages = doc[ChatsFieldName.messages];
+          List<Map<String, dynamic>> indexedMessages = [];
+
+          for (int i = 0; i < messages.length; i++) {
+            final msg = Map<String, dynamic>.from(messages[i]);
+            msg[MessageFieldName.messageIndex] = i;
+            indexedMessages.add(msg);
+          }
+
+          // Trim to last `messageLimit` messages
+          int startIndex = indexedMessages.length > messageLimit
+              ? indexedMessages.length - messageLimit
+              : 0;
+          doc[ChatsFieldName.messages] = indexedMessages.sublist(startIndex);
         }
       }
 
@@ -84,6 +94,7 @@ class UserMongoFetch extends UsersMongoDatabase {
       rethrow;
     }
   }
+
 
 
   Future<List<Map<String, dynamic>>> fetchMessages({
@@ -96,26 +107,61 @@ class UserMongoFetch extends UsersMongoDatabase {
     final collection = db!.collection(collectionName);
 
     try {
-      // Fetch the document with the matching sessionId
-      final document = await collection.findOne({'sessionId': sessionId});
+      final document = await collection.findOne({ChatsFieldName.sessionId: sessionId});
 
-      if (document == null || document['messages'] == null) {
+      if (document == null || document[ChatsFieldName.messages] == null) {
         return [];
       }
 
-      List<dynamic> allMessages = document['messages'];
+      List<dynamic> allMessages = document[ChatsFieldName.messages];
 
-      // Sort messages by insertion order (latest last), or reverse it if needed
+      // Keep original order, or reverse if needed
       allMessages = List<Map<String, dynamic>>.from(allMessages.reversed);
 
-      // Paginate messages manually
       final int start = (page - 1) * itemsPerPage;
       final int end = (start + itemsPerPage).clamp(0, allMessages.length);
 
-      return allMessages.sublist(start, end).cast<Map<String, dynamic>>();
+      final sublist = allMessages.sublist(start, end);
+
+      // Attach index to each message (original index from the reversed list)
+      return List.generate(sublist.length, (i) {
+        final message = sublist[i];
+        final originalIndex = allMessages.length - 1 - (start + i); // real index from original order
+        return {
+          ...message,
+          MessageFieldName.messageIndex: originalIndex,
+        };
+      });
     } catch (e) {
       rethrow;
     }
+  }
+
+
+
+  Future<List<Map<String, dynamic>>> fetchNewUserMessages({
+    required String collectionName,
+    required String sessionId,
+    required int lastIndex, // last seen message index
+  }) async {
+    final collection = db!.collection(collectionName);
+
+    final doc = await collection.findOne({ChatsFieldName.sessionId: sessionId});
+    if (doc == null || !doc.containsKey(ChatsFieldName.messages)) return [];
+
+    final List<dynamic> messages = doc[ChatsFieldName.messages];
+
+    // Get all messages after lastIndex
+    final newMessages = messages
+        .asMap()
+        .entries
+        .where((entry) => entry.key > lastIndex)
+        .map((entry) => {
+      ...Map<String, dynamic>.from(entry.value),
+      MessageFieldName.messageIndex: entry.key,
+    }).toList();
+
+    return newMessages;
   }
 
 

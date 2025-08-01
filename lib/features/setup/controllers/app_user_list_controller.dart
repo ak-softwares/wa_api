@@ -9,7 +9,6 @@ class AppUserListController extends GetxController {
   static AppUserListController get instance => Get.find();
 
   // Variable
-  final UserType userType = UserType.admin;
   RxInt currentPage = 1.obs;
   RxBool isLoading = false.obs;
   RxBool isLoadingMore = false.obs;
@@ -20,7 +19,7 @@ class AppUserListController extends GetxController {
   // Get All products
   Future<void> getAllUsers() async {
     try {
-      final fetchedCustomers = await mongoUserRepository.fetchAppUsers(userType: userType, page: currentPage.value);
+      final fetchedCustomers = await mongoUserRepository.fetchAppUsers(page: currentPage.value);
       users.addAll(fetchedCustomers);
     } catch (e) {
       AppMassages.errorSnackBar(title: 'Error in users Fetching', message: e.toString());

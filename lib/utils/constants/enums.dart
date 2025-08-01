@@ -1,6 +1,6 @@
-enum TextSizes { small, medium, large }
+enum UserType { ai, human }
 
-enum UserType { customer, vendor, admin, n8nUser}
+enum TextSizes { small, medium, large }
 
 enum SearchType { accountVoucher, transaction, product }
 

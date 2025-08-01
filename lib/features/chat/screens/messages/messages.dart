@@ -6,6 +6,7 @@ import '../../../../common/navigation_bar/appbar.dart';
 import '../../../../common/styles/spacing_style.dart';
 import '../../../../common/widgets/custom_shape/containers/rounded_container.dart';
 import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/enums.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../controllers/messages/messages_controller.dart';
 import '../../models/message_model.dart';
@@ -92,9 +93,9 @@ class Messages extends StatelessWidget {
       body: Stack(
         children: [
           // Background
-          Opacity(
-            opacity: 0.1,
-            child: Positioned.fill(
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.1,
               child: ColorFiltered(
                 colorFilter: !isDark
                     ? const ColorFilter.matrix(<double>
@@ -122,14 +123,29 @@ class Messages extends StatelessWidget {
                 child: Padding(
                   padding: AppSpacingStyle.defaultPageHorizontal,
                   child: Obx(() {
-                    if(controller.messages.isEmpty){
+                    if(controller.isLoading.value) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          SizedBox(height: 10,),
+                          Center(
+                            child: SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: CircularProgressIndicator(color: Colors.grey.withOpacity(0.5), strokeWidth: 2),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    else if(controller.messages.isEmpty){
                       return Column(
                         children: [
                           const SizedBox(height: 10),
                           Center(child: Text('No messages Found')),
                         ],
                       );
-                    }else{
+                    } else{
                       final reversedMessages = controller.messages.reversed.toList();
 
                       return ListView.builder(
@@ -144,8 +160,8 @@ class Messages extends StatelessWidget {
                             final message = reversedMessages[index];
                             return MessageBubble(
                               message: message.data.content,
-                              time: '11.23 PM',
-                              isMe: message.type == 'ai',
+                              time: message.timestamp,
+                              isMe: message.type == UserType.ai,
                             );
                           } else {
                             return Column(
@@ -174,10 +190,8 @@ class Messages extends StatelessWidget {
               Padding(
                 padding: AppSpacingStyle.defaultPageHorizontal,
                 child: ChatInputBar(
-                  controller: TextEditingController(),
-                  onSend: () {
-                    // send message
-                  },
+                  controller: controller.messageController,
+                  onSend: () => controller.sendMessage(),
                 ),
               ),
             ],

@@ -1,41 +1,36 @@
+import '../../../utils/constants/db_constants.dart';
+import '../../../utils/constants/enums.dart';
+
 class MessageModel {
-  final String type; // "human" or "ai"
+  final UserType type;
   final MessageData data;
-  final Map<String, dynamic> additionalKwargs;
-  final Map<String, dynamic> responseMetadata;
-  final List<dynamic>? toolCalls;
-  final List<dynamic>? invalidToolCalls;
+  final DateTime? timestamp;
+  final int? messageIndex;
 
   MessageModel({
     required this.type,
     required this.data,
-    required this.additionalKwargs,
-    required this.responseMetadata,
-    this.toolCalls,
-    this.invalidToolCalls,
+    this.timestamp,
+    this.messageIndex
   });
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
-      type: json['type'],
-      data: MessageData.fromJson(json['data']),
-      additionalKwargs:
-      Map<String, dynamic>.from(json['additional_kwargs'] ?? {}),
-      responseMetadata:
-      Map<String, dynamic>.from(json['response_metadata'] ?? {}),
-      toolCalls: json['tool_calls'] ?? [],
-      invalidToolCalls: json['invalid_tool_calls'] ?? [],
+      type: UserType.values.firstWhere(
+            (e) => e.name == json[MessageFieldName.type],
+        orElse: () => UserType.ai, // fallback if unknown
+      ),
+      data: MessageData.fromJson(json[MessageFieldName.data]),
+      timestamp: json[MessageFieldName.timestamp],
+      messageIndex: json[MessageFieldName.messageIndex],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'type': type,
-      'data': data.toJson(),
-      'additional_kwargs': additionalKwargs,
-      'response_metadata': responseMetadata,
-      'tool_calls': toolCalls ?? [],
-      'invalid_tool_calls': invalidToolCalls ?? [],
+      MessageFieldName.type: type.name,
+      MessageFieldName.data: data.toJson(),
+      MessageFieldName.timestamp: timestamp,
     };
   }
 }
@@ -47,13 +42,13 @@ class MessageData {
 
   factory MessageData.fromJson(Map<String, dynamic> json) {
     return MessageData(
-      content: json['content'],
+      content: json[MessageFieldName.content],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'content': content,
+      MessageFieldName.content: content,
     };
   }
 }

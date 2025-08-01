@@ -12,15 +12,6 @@ class MongoDbCredentials {
     required this.collectionName,
   });
 
-  // Convert class to JSON map
-  Map<String, dynamic> toJson() {
-    return {
-      MongoDBCredentialsFieldName.connectionString: EncryptionHelper.encryptText(connectionString),
-      MongoDBCredentialsFieldName.dataBaseName: dataBaseName,
-      MongoDBCredentialsFieldName.collectionName: collectionName,
-    };
-  }
-
   // Create class from JSON map
   factory MongoDbCredentials.fromJson(Map<String, dynamic> json) {
     return MongoDbCredentials(
@@ -28,5 +19,14 @@ class MongoDbCredentials {
       dataBaseName: json[MongoDBCredentialsFieldName.dataBaseName],
       collectionName: json[MongoDBCredentialsFieldName.collectionName],
     );
+  }
+
+  // Convert class to JSON map
+  Map<String, dynamic> toJson() {
+    return {
+      MongoDBCredentialsFieldName.connectionString: EncryptionHelper.encryptText(connectionString),
+      MongoDBCredentialsFieldName.dataBaseName: dataBaseName,
+      MongoDBCredentialsFieldName.collectionName: collectionName,
+    };
   }
 }

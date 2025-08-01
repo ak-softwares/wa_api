@@ -6,6 +6,7 @@ import '../../../../common/navigation_bar/appbar.dart';
 import '../../../../common/styles/spacing_style.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
+import '../../../settings/app_settings.dart';
 import '../../controllers/chats/chats_controller.dart';
 import '../messages/messages.dart';
 import '../search/widgets/search_bar.dart';
@@ -23,7 +24,6 @@ class Chats extends StatelessWidget {
     scrollController.addListener(() async {
       if (controller.chats.length < 10) return; // Exit early if not enough messages
       if (scrollController.position.extentAfter < 0.2 * scrollController.position.maxScrollExtent) {
-        print('=========${controller.hasMoreChats.value}');
         if (!controller.isLoadingMore.value && controller.hasMoreChats.value) {
           controller.isLoadingMore(true);
           controller.currentPage++;
@@ -34,7 +34,7 @@ class Chats extends StatelessWidget {
     });
 
     return Scaffold(
-      appBar: AppAppBar(title: 'WhatsApp API', titleStyle: TextStyle(color: AppColors.whatsAppColor, fontSize: 20),
+      appBar: AppAppBar(title: AppSettings.appName, titleStyle: TextStyle(color: AppColors.whatsAppColor, fontSize: 20),
         widgetInActions: Row(
           children: [
             IconButton(
@@ -58,9 +58,11 @@ class Chats extends StatelessWidget {
         child: ListView(
           controller: scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: AppSpacingStyle.defaultPageHorizontal,
           children: [
-            SearchField(),
+            Padding(
+              padding: AppSpacingStyle.defaultPageHorizontal,
+              child: SearchField(),
+            ),
             const SizedBox(height: 5),
             Obx(() {
               if(controller.isLoading.value){
@@ -93,13 +95,9 @@ class Chats extends StatelessWidget {
                       if (index < controller.chats.length) {
                         return ChatTile(
                             chat: controller.chats[index],
-                            onTap: () =>
-                                Get.to(() =>
-                                    Messages(
-                                      sessionId: controller.chats[index]
-                                          .sessionId,
-                                      messages: controller.chats[index]
-                                          .messages,
+                            onTap: () => Get.to(() => Messages(
+                                      sessionId: controller.chats[index].sessionId,
+                                      // messages: controller.chats[index].messages,
                                     ))
                         );
                       } else {

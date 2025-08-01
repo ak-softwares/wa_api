@@ -2,12 +2,10 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
 import '../../../../data/repositories/user_mongodb/chats_repository/chats_repository.dart';
 import '../../../authentication/controllers/authentication_controller/authentication_controller.dart';
-import '../../../personalization/models/user_model.dart';
 import '../../models/chats_model.dart';
 
 class ChatsController extends GetxController {

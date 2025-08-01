@@ -8,14 +8,14 @@ import '../../../data/repositories/mongodb/authentication/authentication_reposit
 import '../../../utils/constants/image_strings.dart';
 import '../../authentication/controllers/authentication_controller/authentication_controller.dart';
 import '../../personalization/models/user_model.dart';
+import '../models/fb_api_credentials.dart';
 import '../models/mongo_db_credentials.dart';
 
-class MongoDbSetupController extends GetxController {
-  static MongoDbSetupController get instance => Get.find();
+class FBApiSetupController extends GetxController {
+  static FBApiSetupController get instance => Get.find();
 
-  final connectionString = TextEditingController();
-  final dataBaseName = TextEditingController();
-  final collectionName = TextEditingController();
+  final accessToken = TextEditingController();
+  final phoneNumberID = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   final mongoAuthenticationRepository = Get.put(MongoAuthenticationRepository());
@@ -28,9 +28,8 @@ class MongoDbSetupController extends GetxController {
   }
 
   void initialize() {
-    connectionString.text = auth.user.value.mongoDbCredentials?.connectionString ?? '';
-    dataBaseName.text = auth.user.value.mongoDbCredentials?.dataBaseName ?? '';
-    collectionName.text = auth.user.value.mongoDbCredentials?.collectionName ?? '';
+    accessToken.text = auth.user.value.fBApiCredentials?.accessToken ?? '';
+    phoneNumberID.text = auth.user.value.fBApiCredentials?.phoneNumberID ?? '';
   }
 
   Future<void> saveFBApiData() async {
@@ -49,14 +48,13 @@ class MongoDbSetupController extends GetxController {
         return;
       }
 
-      final mongoDbCredentials = MongoDbCredentials(
-        connectionString: connectionString.text.trim(),
-        dataBaseName: dataBaseName.text.trim(),
-        collectionName: collectionName.text.trim(),
+      final fBApiCredentials = FBApiCredentials(
+        accessToken: accessToken.text.trim(),
+        phoneNumberID: phoneNumberID.text.trim(),
       );
 
       final userData = UserModel(
-        mongoDbCredentials: mongoDbCredentials,
+        fBApiCredentials: fBApiCredentials,
       );
 
       await mongoAuthenticationRepository.updateUserById(id: auth.userId, user: userData);

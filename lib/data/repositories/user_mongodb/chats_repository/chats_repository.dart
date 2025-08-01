@@ -10,7 +10,8 @@ class ChatsRepository extends GetxController {
 
   final UserMongoFetch _userMongoFetch = UserMongoFetch();
   RxString collectionName = ''.obs;
-  final int itemsPerPage = int.tryParse(APIConstant.itemsPerPage) ?? 10;
+  final int chatLoadPerPage = APIConstant.chatLoadPerPage;
+  final int messagesLoadPerPage = APIConstant.messagesLoadPerPage;
 
 
   @override
@@ -29,11 +30,12 @@ class ChatsRepository extends GetxController {
     try {
       _initializeUserContext();
       // Fetch products from MongoDB with pagination
-      final List<Map<String, dynamic>> chatsData =
-              await _userMongoFetch.getChats(
-                  collectionName: collectionName.value,
-                  page: page
-              );
+      final List<Map<String, dynamic>> chatsData = await _userMongoFetch.getChats(
+          collectionName: collectionName.value,
+          page: page,
+          itemsPerPage: chatLoadPerPage,
+          messageLimit: 1
+      );
       // Convert data to a list of ProductModel
       final List<ChatModel> chats = chatsData.map((data) => ChatModel.fromJson(data)).toList();
       return chats;

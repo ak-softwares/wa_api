@@ -412,6 +412,15 @@ class ChatsFieldName {
   static const String messages = 'messages';
 }
 
+class MessageFieldName {
+  static const String id = 'id';
+  static const String type = 'type';
+  static const String data = 'data';
+  static const String content = 'content';
+  static const String timestamp = 'timestamp';
+  static const String messageIndex = 'messageIndex';
+}
+
 class PaymentMethodTitle {
   static const String cod = 'Cash on Delivery';
   static const String prepaid = 'Prepaid';
@@ -431,6 +440,7 @@ class UserFieldConstants {
   static const String address = 'billing';
   static const String fCMToken = 'fCMToken';
   static const String mongoDbCredentials = 'mongoDbCredentials';
+  static const String fBApiCredentials = 'fBApiCredentials';
 
 }
 
@@ -444,6 +454,11 @@ class MongoDBCredentialsFieldName {
   static const String connectionString = 'connectionString';
   static const String dataBaseName = 'dataBaseName';
   static const String collectionName = 'collectionName';
+}
+
+class FBApiCredentialsFieldName {
+  static const String accessToken = 'accessToken';
+  static const String phoneNumberID = 'phoneNumberID';
 }
 
 class AddressFieldName {

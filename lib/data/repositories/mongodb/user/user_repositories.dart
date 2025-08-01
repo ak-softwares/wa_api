@@ -20,7 +20,7 @@ class MongoUserRepository extends GetxController {
   final int itemsPerPage = int.tryParse(APIConstant.itemsPerPage) ?? 10;
 
   // Fetch All Products from MongoDB
-  Future<List<UserModel>> fetchAppUsers({required UserType userType, int page = 1}) async {
+  Future<List<UserModel>> fetchAppUsers({int page = 1}) async {
     try {
       // Fetch products from MongoDB with pagination
       final List<Map<String, dynamic>> usersData =

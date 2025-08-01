@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:wa_api/utils/formatters/formatters.dart';
 
 import '../../../../../utils/constants/colors.dart';
 
 class MessageBubble extends StatelessWidget {
   final String message;
-  final String time;
+  final DateTime? time;
   final bool isMe;
 
   const MessageBubble({
     super.key,
     required this.message,
-    required this.time,
+    this.time,
     required this.isMe,
   });
 
@@ -54,7 +55,7 @@ class MessageBubble extends StatelessWidget {
                   child: Row(
                     spacing: 4,
                     children: [
-                      Text(time, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                      Text(AppFormatter.formatDateAsTime(time), style: TextStyle(fontSize: 12, color: Colors.grey[600])),
                       // if (isMe)
                       //   Icon(Icons.done_all, size: 16, color: Colors.grey[600]),
                     ],

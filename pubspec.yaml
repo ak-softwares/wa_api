@@ -6,7 +6,7 @@ description: View WhatsApp API messages instantly on your phone.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 # where 2.0.0 is app version and +5 is Version code 2 update every time when update on play store
-version: 1.0.4+10
+version: 1.0.5+11
 
 environment:
   sdk: '>=3.1.4 <4.0.0'
@@ -51,6 +51,8 @@ dependencies:
   url_launcher: ^6.3.1
   pdf: ^3.11.3
   shared_preferences: ^2.5.3
+  flutter_ringtone_player: ^4.0.0+4
+
 
   # UI
   flutter_native_splash: ^2.3.5
@@ -138,6 +140,7 @@ flutter:
     - assets/fonts/roboto/Roboto-Regular.ttf
     - assets/fonts/times-new-roman/times.ttf
     - assets/fonts/times-new-roman/times-new-roman-bold.ttf
+    - assets/sounds/whatsapp/
     - shorebird.yaml
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

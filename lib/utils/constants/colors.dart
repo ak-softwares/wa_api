@@ -6,14 +6,14 @@ import '../../features/settings/app_settings.dart';
 class AppColors{
   AppColors._();
 
-  // #0B1014 for header black
-
-
   // #24BF64 for text green dark
   // #D8FDD2 for text green light
 
   // #C71843 for text red dark
   // #D7093A for text red light
+
+  static const Color appBarLight = Color(0xFFFFFFFF); // WhatsApp Light Theme App Bar
+  static const Color appBarDark = Color(0xFF0B1014);  // WhatsApp Dark Theme App
 
   // Message Colors
   static const Color messageBackgroundLight = Color(0xFFF5F2EB);

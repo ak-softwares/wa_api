@@ -17,7 +17,6 @@ class ChatInputBar extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isEmojiVisible = false;
     final FocusNode focusNode = FocusNode();
-    final TextEditingController messageController = TextEditingController();
 
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color textCaptionColor = isDark ? AppColors.messageSendInputCaptionDark : AppColors.messageSendInputCaptionLight;

@@ -11,7 +11,7 @@ class AppSettings {
   static const String subTitle            =  'Wholesale Market Place';
 
   static const String appCurrency         =  'INR';
-  static const String currencySymbol   =  '₹';
+  static const String currencySymbol      =  '₹';
   static const int freeShippingOver       =  999;
   static const double shippingCharge      =  100;
   static String version = '';

@@ -1,3 +1,4 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -6,6 +7,7 @@ import 'package:iconsax/iconsax.dart';
 import '../../features/authentication/controllers/authentication_controller/authentication_controller.dart';
 import '../../features/settings/app_settings.dart';
 import '../../features/settings/screen/setting_screen.dart';
+import '../../utils/constants/colors.dart';
 import '../../utils/constants/enums.dart';
 import '../../utils/constants/icons.dart';
 import '../../utils/constants/sizes.dart';
@@ -46,6 +48,7 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget{
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return AppBar(
+      backgroundColor: isDark ? AppColors.appBarDark : AppColors.appBarLight,
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
