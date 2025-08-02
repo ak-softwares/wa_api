@@ -6,7 +6,7 @@ description: View WhatsApp API messages instantly on your phone.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 # where 2.0.0 is app version and +5 is Version code 2 update every time when update on play store
-version: 1.0.5+11
+version: 1.0.6+12
 
 environment:
   sdk: '>=3.1.4 <4.0.0'

@@ -20,7 +20,10 @@ class ChatTile extends StatelessWidget {
     const double chatTileHeight = AppSizes.chatTileHeight;
     const double chatImageHeight = AppSizes.chatImageHeight;
     const double chatTileRadius = AppSizes.chatTileRadius;
+    final int lastSeenIndex = chat.lastSeenIndex ?? 0;
+    final int lastMessageIndex = chat.messages?.last.messageIndex ?? 0;
 
+    final int difference = lastMessageIndex - lastSeenIndex;
     return InkWell(
       onTap : onTap,
       child: Padding(
@@ -53,7 +56,7 @@ class ChatTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(chat.sessionId, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                      Text(AppFormatter.formatDateAsTime(chat.messages?.last.timestamp), style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8))),
+                      Text(AppFormatter.formatDateAsTime(chat.lastModified), style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8))),
                     ],
                   ),
                   Row(
@@ -77,15 +80,15 @@ class ChatTile extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 10),
-
-                      // Badge(
-                      //   padding: EdgeInsets.all(3),
-                      //   backgroundColor: AppColors.whatsAppColor,
-                      //   label: Text('1'),
-                      //   largeSize: 10,
-                      //   textColor: Colors.white,
-                      //   textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                      // )
+                      if (difference > 0)
+                        Badge(
+                        padding: EdgeInsets.all(3),
+                        backgroundColor: AppColors.whatsAppColor,
+                        label: Text(difference.toString()),
+                        largeSize: 10,
+                        textColor: Colors.white,
+                        textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                      )
                     ],
                   ),
                 ],

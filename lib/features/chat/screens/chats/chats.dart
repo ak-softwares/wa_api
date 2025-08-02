@@ -93,13 +93,13 @@ class Chats extends StatelessWidget {
                     crossAxisSpacing: 0,
                     itemBuilder: (context, index) {
                       if (index < controller.chats.length) {
-                        return ChatTile(
-                            chat: controller.chats[index],
-                            onTap: () => Get.to(() => Messages(
-                                      sessionId: controller.chats[index].sessionId,
-                                      // messages: controller.chats[index].messages,
-                                    ))
-                        );
+                          return ChatTile(
+                              chat: controller.chats[index],
+                              onTap: () {
+                                controller.updateLastSeenBySessionId(sessionId: controller.chats[index].sessionId, lastSeenIndex: controller.chats[index].messages?.last.messageIndex);
+                                Get.to(() => Messages(sessionId: controller.chats[index].sessionId));
+                              }
+                          );
                       } else {
                         return Column(
                           children: [

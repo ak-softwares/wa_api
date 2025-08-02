@@ -24,6 +24,7 @@ class APIConstant {
   // static final String wooConsumerSecret     =  dotenv.get('WOO_CONSUMER_SECRET', fallback: '');
   // static final String authorization         = 'Basic ${base64Encode(utf8.encode('$wooConsumerKey:$wooConsumerSecret'))}';
 
+  static const int reloadMessageSeconds     = 5;
   static const int chatLoadPerPage          = 15;
   static const int messagesLoadPerPage      = 15;
   static const String itemsPerPage          = '10';

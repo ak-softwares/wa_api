@@ -85,6 +85,7 @@ class MessagesRepository extends GetxController {
         collectionName: collectionName.value,
         sessionId: sessionId,
         message: message.toJson(),
+        lastSeenIndex: message.messageIndex,
       );
     } catch (e) {
       rethrow;

@@ -7,11 +7,16 @@ class ChatModel {
   String? id;
   final String sessionId;
   List<MessageModel>? messages;
+  final DateTime? lastModified;
+  int? lastSeenIndex;
+
 
   ChatModel({
     required this.id,
     required this.sessionId,
     this.messages,
+    this.lastModified,
+    this.lastSeenIndex,
   });
 
   factory ChatModel.fromJson(Map<String, dynamic> json) {
@@ -25,6 +30,8 @@ class ChatModel {
           : json[ChatsFieldName.id]?.toString(), // Fallback to string if not ObjectId
       sessionId: json[ChatsFieldName.sessionId],
       messages: messages,
+      lastModified: json[ChatsFieldName.lastModified],
+      lastSeenIndex: json[ChatsFieldName.lastSeenIndex],
     );
   }
 
@@ -34,6 +41,8 @@ class ChatModel {
       ChatsFieldName.id: id,
       ChatsFieldName.sessionId: sessionId,
       ChatsFieldName.messages: messages?.map((e) => e.toJson()).toList(),
+      ChatsFieldName.lastModified: lastModified,
+      ChatsFieldName.lastSeenIndex: lastSeenIndex,
     };
   }
 }

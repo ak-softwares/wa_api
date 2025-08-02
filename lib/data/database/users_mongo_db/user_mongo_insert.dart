@@ -27,12 +27,16 @@ class UserMongoInsert extends UsersMongoDatabase {
     required String collectionName,
     required String sessionId,
     required Map<String, dynamic> message,
+    int? lastSeenIndex,
   }) async {
     await _ensureConnected();
     try {
       await db!.collection(collectionName).update(
         where.eq(ChatsFieldName.sessionId, sessionId),
-        modify.push(ChatsFieldName.messages, message),
+        modify
+            .push(ChatsFieldName.messages, message)
+            .set(ChatsFieldName.lastModified, DateTime.now().toUtc())
+            .set(ChatsFieldName.lastSeenIndex, lastSeenIndex),
       );
     } catch (e) {
       throw Exception('Failed to insert message: $e');

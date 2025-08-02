@@ -58,6 +58,7 @@ class UserMongoFetch extends UsersMongoDatabase {
 
     try {
       var query = where
+        ..sortBy(ChatsFieldName.lastModified, descending: true)
         ..sortBy(ChatsFieldName.id, descending: true)
         ..skip(skip)
         ..limit(itemsPerPage);

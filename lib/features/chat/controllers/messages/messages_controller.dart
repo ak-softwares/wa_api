@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
 import '../../../../data/repositories/user_mongodb/messages_repository/messages_repository.dart';
+import '../../../../utils/constants/api_constants.dart';
 import '../../../../utils/constants/enums.dart';
 import '../../models/message_model.dart';
 import '../chats/chats_controller.dart';
@@ -20,6 +21,7 @@ class MessagesController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isLoadingMore = false.obs;
   final RxBool hasMoreMessages = true.obs;
+  final int reloadMessageSeconds = APIConstant.reloadMessageSeconds;
   RxList<MessageModel> messages = <MessageModel>[].obs;
   final TextEditingController messageController = TextEditingController();
 
@@ -45,7 +47,7 @@ class MessagesController extends GetxController {
   void startPollingMessages() {
     _pollingTimer?.cancel(); // Clear existing timer if any
 
-    _pollingTimer = Timer.periodic(const Duration(seconds: 5), (_) async {
+    _pollingTimer = Timer.periodic(Duration(seconds: reloadMessageSeconds), (_) async {
       try {
 
         // Ensure we have a valid last index
@@ -60,6 +62,12 @@ class MessagesController extends GetxController {
         if (newMessages.isNotEmpty) {
           // Add messages and play sound
           messages.addAll(newMessages);
+          chatsController.updateLastSeenBySessionId(sessionId: sessionId, lastSeenIndex: lastIndex + newMessages.length);
+          final chatIndex = chatsController.chats.indexWhere((c) => c.sessionId == sessionId);
+          if (chatIndex != -1) {
+            chatsController.chats[chatIndex].messages?.add(newMessages.last);
+            chatsController.chats.refresh();
+          }
           FlutterRingtonePlayer().play(
             fromAsset: "assets/sounds/whatsapp/incoming-message-online-whatsapp.mp3",
             looping: false, // ensure it doesn't keep playing
@@ -95,6 +103,7 @@ class MessagesController extends GetxController {
         type: UserType.ai,
         data: MessageData(content: textMessage),
         timestamp: DateTime.now(),
+        messageIndex: messages.last.messageIndex! + 1,
       );
 
       messages.add(message);
@@ -102,6 +111,7 @@ class MessagesController extends GetxController {
       final chatIndex = chatsController.chats.indexWhere((c) => c.sessionId == sessionId);
       if (chatIndex != -1) {
         chatsController.chats[chatIndex].messages?.add(message);
+        chatsController.chats[chatIndex].lastSeenIndex = message.messageIndex;
         chatsController.chats.refresh();
       }
 

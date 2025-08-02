@@ -4,11 +4,13 @@ import '../../../../features/authentication/controllers/authentication_controlle
 import '../../../../features/chat/models/chats_model.dart';
 import '../../../../utils/constants/api_constants.dart';
 import '../../../database/users_mongo_db/user_mongo_fetch.dart';
+import '../../../database/users_mongo_db/user_mongo_update.dart';
 
 class ChatsRepository extends GetxController {
   static ChatsRepository get instance => Get.find();
 
   final UserMongoFetch _userMongoFetch = UserMongoFetch();
+  final UserMongoUpdate _userMongoUpdate = UserMongoUpdate();
   RxString collectionName = ''.obs;
   final int chatLoadPerPage = APIConstant.chatLoadPerPage;
   final int messagesLoadPerPage = APIConstant.messagesLoadPerPage;
@@ -39,6 +41,19 @@ class ChatsRepository extends GetxController {
       // Convert data to a list of ProductModel
       final List<ChatModel> chats = chatsData.map((data) => ChatModel.fromJson(data)).toList();
       return chats;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Update Last seen in chat
+  Future<void> updateLastSeenBySessionId({required String sessionId, required int lastSeenIndex}) async {
+    try {
+      await _userMongoUpdate.updateLastSeenBySessionId(
+        collectionName: collectionName.value,
+        sessionId: sessionId,
+        lastSeenIndex: lastSeenIndex,
+      );
     } catch (e) {
       rethrow;
     }

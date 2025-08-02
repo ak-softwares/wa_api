@@ -90,113 +90,117 @@ class Messages extends StatelessWidget {
           ],
         ),
       ),
-      body: Stack(
-        children: [
-          // Background
-          Positioned.fill(
-            child: Opacity(
-              opacity: 0.1,
-              child: ColorFiltered(
-                colorFilter: !isDark
-                    ? const ColorFilter.matrix(<double>
-                          [
-                            -1, 0, 0, 0, 255, // Red
-                            0, -1, 0, 0, 255, // Green
-                            0, 0, -1, 0, 255, // Blue
-                            0, 0, 0, 1, 0,   // Alpha
-                          ])
-                    : const ColorFilter.mode(
-                        Colors.transparent,
-                        BlendMode.dst, // No change
-                      ),
-                child: Image.asset('assets/images/whatsapp/whatsapp_doodle_pattern.png', fit: BoxFit.cover),
+      body: RefreshIndicator(
+        color: AppColors.refreshIndicator,
+        onRefresh: () async => controller.refreshMessages(),
+        child: Stack(
+          children: [
+            // Background
+            Positioned.fill(
+              child: Opacity(
+                opacity: 0.1,
+                child: ColorFiltered(
+                  colorFilter: !isDark
+                      ? const ColorFilter.matrix(<double>
+                            [
+                              -1, 0, 0, 0, 255, // Red
+                              0, -1, 0, 0, 255, // Green
+                              0, 0, -1, 0, 255, // Blue
+                              0, 0, 0, 1, 0,   // Alpha
+                            ])
+                      : const ColorFilter.mode(
+                          Colors.transparent,
+                          BlendMode.dst, // No change
+                        ),
+                  child: Image.asset('assets/images/whatsapp/whatsapp_doodle_pattern.png', fit: BoxFit.cover),
+                ),
               ),
             ),
-          ),
 
-          // Foreground layout
-          Column(
-            children: [
+            // Foreground layout
+            Column(
+              children: [
 
-              // Messages list fills remaining space
-              Expanded(
-                child: Padding(
-                  padding: AppSpacingStyle.defaultPageHorizontal,
-                  child: Obx(() {
-                    if(controller.isLoading.value) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          SizedBox(height: 10,),
-                          Center(
-                            child: SizedBox(
-                              height: 50,
-                              width: 50,
-                              child: CircularProgressIndicator(color: Colors.grey.withOpacity(0.5), strokeWidth: 2),
+                // Messages list fills remaining space
+                Expanded(
+                  child: Padding(
+                    padding: AppSpacingStyle.defaultPageHorizontal,
+                    child: Obx(() {
+                      if(controller.isLoading.value) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            SizedBox(height: 10,),
+                            Center(
+                              child: SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: CircularProgressIndicator(color: Colors.grey.withOpacity(0.5), strokeWidth: 2),
+                              ),
                             ),
-                          ),
-                        ],
-                      );
-                    }
-                    else if(controller.messages.isEmpty){
-                      return Column(
-                        children: [
-                          const SizedBox(height: 10),
-                          Center(child: Text('No messages Found')),
-                        ],
-                      );
-                    } else{
-                      final reversedMessages = controller.messages.reversed.toList();
+                          ],
+                        );
+                      }
+                      else if(controller.messages.isEmpty){
+                        return Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            Center(child: Text('No messages Found')),
+                          ],
+                        );
+                      } else{
+                        final reversedMessages = controller.messages.reversed.toList();
 
-                      return ListView.builder(
-                        reverse: true, // 👈 scroll starts from bottom
-                        controller: scrollController,
-                        padding: const EdgeInsets.only(top: 20), // use top padding when reversed
-                        itemCount: controller.isLoadingMore.value
-                            ? reversedMessages.length + 1
-                            : reversedMessages.length,
-                        itemBuilder: (context, index) {
-                          if (index < reversedMessages.length) {
-                            final message = reversedMessages[index];
-                            return MessageBubble(
-                              message: message.data.content,
-                              time: message.timestamp,
-                              isMe: message.type == UserType.ai,
-                            );
-                          } else {
-                            return Column(
-                              children: [
-                                Center(
-                                  child: SizedBox(
-                                    height: 50,
-                                    width: 50,
-                                    child: CircularProgressIndicator(color: Colors.grey.withOpacity(0.5), strokeWidth: 2),
+                        return ListView.builder(
+                          reverse: true, // 👈 scroll starts from bottom
+                          controller: scrollController,
+                          padding: const EdgeInsets.only(top: 20), // use top padding when reversed
+                          itemCount: controller.isLoadingMore.value
+                              ? reversedMessages.length + 1
+                              : reversedMessages.length,
+                          itemBuilder: (context, index) {
+                            if (index < reversedMessages.length) {
+                              final message = reversedMessages[index];
+                              return MessageBubble(
+                                message: message.data.content,
+                                time: message.timestamp,
+                                isMe: message.type == UserType.ai,
+                              );
+                            } else {
+                              return Column(
+                                children: [
+                                  Center(
+                                    child: SizedBox(
+                                      height: 50,
+                                      width: 50,
+                                      child: CircularProgressIndicator(color: Colors.grey.withOpacity(0.5), strokeWidth: 2),
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 10,),
-                              ],
-                            );
-                          }
-                        },
-                      );
+                                  SizedBox(height: 10,),
+                                ],
+                              );
+                            }
+                          },
+                        );
 
-                    }
-                  }),
+                      }
+                    }),
+                  ),
                 ),
-              ),
 
 
-              // Input bar fixed at bottom
-              Padding(
-                padding: AppSpacingStyle.defaultPageHorizontal,
-                child: ChatInputBar(
-                  controller: controller.messageController,
-                  onSend: () => controller.sendMessage(),
+                // Input bar fixed at bottom
+                Padding(
+                  padding: AppSpacingStyle.defaultPageHorizontal,
+                  child: ChatInputBar(
+                    controller: controller.messageController,
+                    onSend: () => controller.sendMessage(),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       )
     );
   }

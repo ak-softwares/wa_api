@@ -28,6 +28,27 @@ class ChatsController extends GetxController {
     refreshChats();
   }
 
+  // Update Last seen in chat
+  Future<void> updateLastSeenBySessionId({required String sessionId, required int? lastSeenIndex}) async {
+    try {
+      final chatIndex = chats.indexWhere((chat) => chat.sessionId == sessionId);
+
+      if (lastSeenIndex == null || (chats[chatIndex].lastSeenIndex == lastSeenIndex)) return;
+
+      await chatsRepository.updateLastSeenBySessionId(
+        sessionId: sessionId,
+        lastSeenIndex: lastSeenIndex,
+      );
+      // ✅ Update locally
+      if (chatIndex != -1) {
+        chats[chatIndex].lastSeenIndex = lastSeenIndex;
+        chats.refresh();
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // Get all chats
   Future<void> getChats() async {
     try {

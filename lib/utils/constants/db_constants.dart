@@ -410,6 +410,8 @@ class ChatsFieldName {
   static const String id = '_id';
   static const String sessionId = 'sessionId';
   static const String messages = 'messages';
+  static const String lastModified = 'lastModified';
+  static const String lastSeenIndex = 'lastSeenIndex';
 }
 
 class MessageFieldName {
