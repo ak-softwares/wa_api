@@ -7,6 +7,7 @@ import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
 import '../../../../data/repositories/user_mongodb/messages_repository/messages_repository.dart';
 import '../../../../utils/constants/api_constants.dart';
 import '../../../../utils/constants/enums.dart';
+import '../../../authentication/controllers/authentication_controller/authentication_controller.dart';
 import '../../models/message_model.dart';
 import '../chats/chats_controller.dart';
 
@@ -27,6 +28,7 @@ class MessagesController extends GetxController {
 
   final messagesRepository = Get.put(MessagesRepository());
   final chatsController = Get.put(ChatsController());
+  final auth = Get.put(AuthenticationController());
 
   Timer? _pollingTimer;
 

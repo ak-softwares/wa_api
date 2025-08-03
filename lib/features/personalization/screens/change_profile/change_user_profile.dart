@@ -43,16 +43,41 @@ class ChangeUserProfile extends StatelessWidget {
                         TextFormField(
                           controller: controller.name,
                           validator: (value) => Validator.validateEmptyText(fieldName: 'Full Name',value: value),
-                          decoration: const InputDecoration(prefixIcon: Icon(Iconsax.user), labelText: 'Full Name*'),
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Iconsax.user),
+                            labelText: 'Full Name*',
+                            // Default border (used when not focused)
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                              borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                            ),
+
+                            // Border when focused
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                              borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                            ),
+                          ),
                         ),
 
                         // email
                         TextFormField(
                             controller: controller.email,
                             validator: (value) => Validator.validateEmail(value),
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               prefixIcon: Icon(Iconsax.direct_right),
                               labelText: AppTexts.tEmail,
+                              // Default border (used when not focused)
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                              ),
+
+                              // Border when focused
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                              ),
                             )
                         ),
 
@@ -60,9 +85,20 @@ class ChangeUserProfile extends StatelessWidget {
                         TextFormField(
                             controller: controller.phone,
                             validator: (value) => Validator.validatePhoneNumber(value),
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               prefixIcon: Icon(Iconsax.call),
                               labelText: AppTexts.tPhone,
+                              // Default border (used when not focused)
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                              ),
+
+                              // Border when focused
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                              ),
                             )
                         ),
                       ]

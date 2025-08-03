@@ -1,6 +1,7 @@
 import 'package:mongo_dart/mongo_dart.dart';
 
 import '../../../utils/constants/db_constants.dart';
+import '../../../utils/helpers/encryption_hepler.dart';
 import '../../setup/models/fb_api_credentials.dart';
 import '../../setup/models/mongo_db_credentials.dart';
 import 'address_model.dart';
@@ -65,7 +66,7 @@ class UserModel {
     addIfNotNull(UserFieldConstants.id, id);
     addIfNotNull(UserFieldConstants.email, email);
     addIfNotNull(UserFieldConstants.name, name);
-    addIfNotNull(UserFieldConstants.password, password);
+    addIfNotNull(UserFieldConstants.password, EncryptionHelper.hashPassword(password: password ?? ''));
     addIfNotNull(UserFieldConstants.phone, phone);
     addIfNotNull(UserFieldConstants.address, address?.toMap());
     addIfNotNull(UserFieldConstants.dateCreated, dateCreated);
@@ -83,7 +84,6 @@ class UserModel {
           ? (json[UserFieldConstants.id] as ObjectId).toHexString() // Convert ObjectId to string
           : json[UserFieldConstants.id]?.toString(), // Fallback to string if not ObjectId
       email: json[UserFieldConstants.email],
-      password: json[UserFieldConstants.password],
       name: json[UserFieldConstants.name],
       phone: json[UserFieldConstants.phone] ?? (json[UserFieldConstants.address]?[UserFieldConstants.phone] ?? ''),
       address: AddressModel.fromJson(json[UserFieldConstants.address] ?? {}),
@@ -114,7 +114,6 @@ class UserModel {
     addIfNotNull(UserFieldConstants.id, id);
     addIfNotNull(UserFieldConstants.email, email);
     addIfNotNull(UserFieldConstants.name, name);
-    addIfNotNull(UserFieldConstants.password, password);
     addIfNotNull(UserFieldConstants.phone, phone);
     // addIfNotNull(UserFieldConstants.address, address?.toMap()); // Assuming address has toJson()
     addIfNotNull(UserFieldConstants.dateCreated, dateCreated?.toIso8601String());

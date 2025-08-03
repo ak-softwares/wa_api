@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../common/dialog_box_massages/animation_loader.dart';
 import '../../../../common/layout_model/grid_layout.dart';
 import '../../../../common/navigation_bar/appbar.dart';
 import '../../../../common/styles/spacing_style.dart';
 import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/sizes.dart';
+import '../../../authentication/controllers/authentication_controller/authentication_controller.dart';
 import '../../../settings/app_settings.dart';
+import '../../../setup/screens/mongo_db_setup.dart';
 import '../../controllers/chats/chats_controller.dart';
 import '../messages/messages.dart';
 import '../search/widgets/search_bar.dart';
@@ -18,6 +22,7 @@ class Chats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Get.put(AuthenticationController());
     final controller = Get.put(ChatsController());
     final ScrollController scrollController = ScrollController();
 
@@ -65,7 +70,16 @@ class Chats extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Obx(() {
-              if(controller.isLoading.value){
+              if(auth.user.value.mongoDbCredentials?.collectionName == null) {
+                return AnimationLoaderWidgets(
+                  text: 'Please Setup MongoDB Database',
+                  animation: Images.pencilAnimation,
+                  showAction: true,
+                  actionText: 'Let\'s setup',
+                  onActionPress: () => Get.to(() => MongoDBSetup()),
+                );
+              }
+              else if(controller.isLoading.value){
                 return GridLayout(
                     itemCount: 2,
                     crossAxisCount: 1,
@@ -96,8 +110,8 @@ class Chats extends StatelessWidget {
                           return ChatTile(
                               chat: controller.chats[index],
                               onTap: () {
-                                controller.updateLastSeenBySessionId(sessionId: controller.chats[index].sessionId, lastSeenIndex: controller.chats[index].messages?.last.messageIndex);
                                 Get.to(() => Messages(sessionId: controller.chats[index].sessionId));
+                                controller.updateLastSeenBySessionId(sessionId: controller.chats[index].sessionId, lastSeenIndex: controller.chats[index].messages?.last.messageIndex);
                               }
                           );
                       } else {

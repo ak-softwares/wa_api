@@ -65,6 +65,7 @@ class ChatsController extends GetxController {
   // Refresh chats
   Future<void> refreshChats() async {
     try {
+      if(authenticationController.user.value.mongoDbCredentials?.collectionName == null) return;
       isLoading(true);
       hasMoreChats(true); // No more messages to load
       currentPage.value = 1; // Reset page number

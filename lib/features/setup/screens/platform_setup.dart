@@ -15,6 +15,7 @@ class PlatformSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Get.put(AuthenticationController());
 
     return Scaffold(
       appBar: AppAppBar(title: 'Setup'),
@@ -26,21 +27,20 @@ class PlatformSelectionScreen extends StatelessWidget {
             _PlatformCard(
                 name: 'MongoDB',
                 image: 'assets/images/setup_logos/mongo_db.png',
-                color: Colors.blue,
-                onTap: () => Get.to(() => MongoDBSetup())
+                onTap: () => Get.to(() => MongoDBSetup()),
+                isSetup: auth.user.value.mongoDbCredentials?.collectionName != null,
             ),
             SizedBox(height: AppSizes.md),
             _PlatformCard(
                 name: 'Facebook API Console',
                 image: 'assets/images/setup_logos/facebook_logo.png',
-                color: Colors.blue,
-                onTap: () => Get.to(() => FBApiSetup())
+                onTap: () => Get.to(() => FBApiSetup()),
+                isSetup: auth.user.value.fBApiCredentials?.accessToken != null,
             ),
             SizedBox(height: AppSizes.md),
             _PlatformCard(
               name: 'n8n Setup',
               image: 'assets/images/setup_logos/n8n.png',
-              color: Colors.green,
               onTap: () => Get.to(() => N8NSetup())
             ),
             SizedBox(height: AppSizes.md),
@@ -54,19 +54,18 @@ class PlatformSelectionScreen extends StatelessWidget {
 class _PlatformCard extends StatelessWidget {
   final String name;
   final String image;
-  final Color color;
+  final bool isSetup;
   final VoidCallback onTap;
 
   const _PlatformCard({
     required this.name,
     required this.image,
-    required this.color,
     required this.onTap,
+    this.isSetup = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final auth = Get.put(AuthenticationController());
 
     return Card(
       elevation: 4,
@@ -100,6 +99,11 @@ class _PlatformCard extends StatelessWidget {
               ),
             ),
           ),
+          Positioned(
+              top: 10,
+              right: 10,
+              child: Icon(Icons.check, color: isSetup ? Colors.green : Colors.transparent)
+          )
         ],
       ),
     );

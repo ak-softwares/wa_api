@@ -28,7 +28,6 @@ class SignupController extends GetxController{
   GlobalKey<FormState> signupFormKey = GlobalKey<FormState>(); //Form key for form validation
 
   final userController = Get.put(AuthenticationController());
-  final loginController = Get.put(LoginController());
   final mongoAuthenticationRepository = Get.put(MongoAuthenticationRepository());
 
   void signupWithEmailPassword() async {
@@ -48,21 +47,20 @@ class SignupController extends GetxController{
       UserModel user = UserModel(
         name: name.text.trim(),
         email: email.text.trim(),
-        password: EncryptionHelper.hashPassword(password: password.text.trim()),
+        password: password.text.trim(),
         phone: phone.text.trim(),
         dateCreated: DateTime.now(),
       );
 
-      await mongoAuthenticationRepository.singUpWithEmailAndPass(user: user);
+      final String id = await mongoAuthenticationRepository.singUpWithEmailAndPass(user: user);
+      user.id = id;
 
       // save to local storage
-      if(loginController.rememberMe.value) {
-        localStorage.write(LocalStorageName.rememberMeEmail, email.text.trim());
-        localStorage.write(LocalStorageName.rememberMePassword, password.text);
-      }
+      localStorage.write(LocalStorageName.rememberMeEmail, email.text.trim());
+      localStorage.write(LocalStorageName.rememberMePassword, password.text);
 
       FullScreenLoader.stopLoading();
-      userController.login(user: user);
+      await userController.login(user: user);
     } catch (error) {
       FullScreenLoader.stopLoading();
       AppMassages.errorSnackBar(title: 'Oh Snap!', message: error.toString());
