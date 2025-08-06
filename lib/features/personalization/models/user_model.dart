@@ -33,7 +33,7 @@ class UserModel {
     this.fBApiCredentials,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
+  factory UserModel.fromJson(Map<String, dynamic> json, {bool isLocal = false}) {
 
     return UserModel(
       id: json[UserFieldConstants.id] is ObjectId
@@ -44,8 +44,12 @@ class UserModel {
       name: json[UserFieldConstants.name],
       phone: json[UserFieldConstants.phone] ?? (json[UserFieldConstants.address]?[UserFieldConstants.phone] ?? ''),
       address: AddressModel.fromJson(json[UserFieldConstants.address] ?? {}),
-      dateCreated: json[UserFieldConstants.dateCreated],
-      dateModified: json[UserFieldConstants.dateModified],
+      dateCreated: isLocal && json[UserFieldConstants.dateCreated] != null
+          ? DateTime.parse(json[UserFieldConstants.dateCreated])
+          : json[UserFieldConstants.dateCreated],
+      dateModified: isLocal && json[UserFieldConstants.dateModified] != null
+          ? DateTime.parse(json[UserFieldConstants.dateModified])
+          : json[UserFieldConstants.dateModified],
       fCMToken: json[UserFieldConstants.fCMToken],
       mongoDbCredentials: json[UserFieldConstants.mongoDbCredentials] != null
           ? MongoDbCredentials.fromJson(json[UserFieldConstants.mongoDbCredentials])
@@ -57,7 +61,7 @@ class UserModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool isLocal = false}) {
     final map = <String, dynamic>{};
 
     void addIfNotNull(String key, dynamic value) {
@@ -69,58 +73,12 @@ class UserModel {
     addIfNotNull(UserFieldConstants.password, EncryptionHelper.hashPassword(password: password ?? ''));
     addIfNotNull(UserFieldConstants.phone, phone);
     addIfNotNull(UserFieldConstants.address, address?.toMap());
-    addIfNotNull(UserFieldConstants.dateCreated, dateCreated);
-    addIfNotNull(UserFieldConstants.dateModified, dateModified);
+    addIfNotNull(UserFieldConstants.dateCreated, isLocal ? dateCreated?.toIso8601String() : dateCreated);
+    addIfNotNull(UserFieldConstants.dateModified, isLocal ? dateModified?.toIso8601String() : dateModified);
     addIfNotNull(UserFieldConstants.mongoDbCredentials, mongoDbCredentials?.toJson());
     addIfNotNull(UserFieldConstants.fBApiCredentials, fBApiCredentials?.toJson());
 
     return map;
   }
 
-  factory UserModel.fromJsonForLocal(Map<String, dynamic> json) {
-
-    return UserModel(
-      id: json[UserFieldConstants.id] is ObjectId
-          ? (json[UserFieldConstants.id] as ObjectId).toHexString() // Convert ObjectId to string
-          : json[UserFieldConstants.id]?.toString(), // Fallback to string if not ObjectId
-      email: json[UserFieldConstants.email],
-      name: json[UserFieldConstants.name],
-      phone: json[UserFieldConstants.phone] ?? (json[UserFieldConstants.address]?[UserFieldConstants.phone] ?? ''),
-      address: AddressModel.fromJson(json[UserFieldConstants.address] ?? {}),
-      dateCreated: json[UserFieldConstants.dateCreated] != null
-          ? DateTime.parse(json[UserFieldConstants.dateCreated])
-          : null,
-      dateModified: json[UserFieldConstants.dateModified] != null
-          ? DateTime.parse(json[UserFieldConstants.dateModified])
-          : null,
-      fCMToken: json[UserFieldConstants.fCMToken],
-      mongoDbCredentials: json[UserFieldConstants.mongoDbCredentials] != null
-          ? MongoDbCredentials.fromJson(json[UserFieldConstants.mongoDbCredentials])
-          : null,
-      fBApiCredentials: json[UserFieldConstants.fBApiCredentials] != null
-          ? FBApiCredentials.fromJson(json[UserFieldConstants.fBApiCredentials])
-          : null,
-
-    );
-  }
-
-  Map<String, dynamic> toMapForLocal() {
-    final map = <String, dynamic>{};
-
-    void addIfNotNull(String key, dynamic value) {
-      if (value != null) map[key] = value;
-    }
-
-    addIfNotNull(UserFieldConstants.id, id);
-    addIfNotNull(UserFieldConstants.email, email);
-    addIfNotNull(UserFieldConstants.name, name);
-    addIfNotNull(UserFieldConstants.phone, phone);
-    // addIfNotNull(UserFieldConstants.address, address?.toMap()); // Assuming address has toJson()
-    addIfNotNull(UserFieldConstants.dateCreated, dateCreated?.toIso8601String());
-    addIfNotNull(UserFieldConstants.dateModified, dateModified?.toIso8601String());
-    addIfNotNull(UserFieldConstants.mongoDbCredentials, mongoDbCredentials?.toJson());
-    addIfNotNull(UserFieldConstants.fBApiCredentials, fBApiCredentials?.toJson());
-
-    return map;
-  }
 }

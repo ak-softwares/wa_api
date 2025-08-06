@@ -16,9 +16,10 @@ import 'widgets/input_bar.dart';
 import 'widgets/message_bubble.dart';
 
 class Messages extends StatelessWidget {
-  const Messages({super.key, required this.sessionId, this.messages});
+  const Messages({super.key, required this.sessionId, this.messages, this.text});
 
   final String sessionId;
+  final String? text;
   final List<MessageModel>? messages;
 
   @override
@@ -26,6 +27,12 @@ class Messages extends StatelessWidget {
     final auth = Get.put(AuthenticationController());
     final controller = Get.put(MessagesController(sessionId));
     final ScrollController scrollController = ScrollController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (text != null && text!.isNotEmpty) {
+        controller.messageController.text = text!;
+      }
+    });
 
     controller.messages.addAll(messages != null ? messages! : []);
     const double chatTileHeight = AppSizes.chatTileHeight;

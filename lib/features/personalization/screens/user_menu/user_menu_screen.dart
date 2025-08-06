@@ -25,7 +25,6 @@ class UserMenuScreen extends StatelessWidget {
           onRefresh: () async => await auth.refreshUser(),
           color: AppColors.refreshIndicator,
           child: ListView(
-            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const CustomerProfileCard(),
 

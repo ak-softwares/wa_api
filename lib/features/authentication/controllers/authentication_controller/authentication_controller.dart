@@ -12,8 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../common/dialog_box_massages/dialog_massage.dart';
 import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
 import '../../../../data/repositories/mongodb/authentication/authentication_repositories.dart';
-import '../../../../utils/constants/api_constants.dart';
-import '../../../../utils/constants/enums.dart';
 import '../../../../utils/constants/local_storage_constants.dart';
 import '../../../../utils/exceptions/firebase_auth_exceptions.dart';
 import '../../../../utils/exceptions/format_exceptions.dart';
@@ -67,7 +65,7 @@ class AuthenticationController extends GetxController {
 
   String get userId {
     if (!isAdminLogin.value || user.value.id == null || user.value.id!.isEmpty) {
-      throw Exception("User not authenticated. Call `checkIsAdminLogin()` first.");
+      throw Exception("User not authenticated.");
     }
     return user.value.id!;
   }
@@ -104,7 +102,7 @@ class AuthenticationController extends GetxController {
   Future<void> deleteLocalAuthToken() async {
     await secureStorage.delete(key: LocalStorageName.authUserID);
     await secureStorage.delete(key: LocalStorageName.loginExpiry);
-    // localStorage.remove(LocalStorageName.userData);
+    await removeUserFromLocal();
   }
 
   // Fetch user record
@@ -153,7 +151,7 @@ class AuthenticationController extends GetxController {
   Future<void> mongoDeleteAccount() async {
     try {
       await mongoAuthenticationRepository.deleteUser(id: user.value.id.toString());
-      logout();
+      await logout();
     } catch (error) {
       AppMassages.errorSnackBar(title: 'Error', message: error.toString());
     }
@@ -174,7 +172,7 @@ class AuthenticationController extends GetxController {
     try {
       await GoogleSignIn().signOut();
       await _auth.signOut();
-      deleteLocalAuthToken();
+      await deleteLocalAuthToken();
       isAdminLogin.value = false;
       user.value = UserModel();
       NavigationHelper.navigateToLoginScreen();
@@ -196,7 +194,7 @@ class AuthenticationController extends GetxController {
 
   Future<void> saveUserFromLocal(UserModel user) async {
     final prefs = await SharedPreferences.getInstance();
-    final userJson = jsonEncode(user.toMapForLocal());
+    final userJson = jsonEncode(user.toMap(isLocal: true));
     await prefs.setString(LocalStorageName.userData, userJson);
   }
 
@@ -206,9 +204,15 @@ class AuthenticationController extends GetxController {
 
     if (userJson != null) {
       final Map<String, dynamic> jsonMap = jsonDecode(userJson);
-      return UserModel.fromJsonForLocal(jsonMap);
+      return UserModel.fromJson(jsonMap, isLocal: true);
     }
     return null;
   }
+
+  Future<void> removeUserFromLocal() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(LocalStorageName.userData);
+  }
+
 
 }

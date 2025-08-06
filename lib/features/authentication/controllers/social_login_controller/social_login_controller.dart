@@ -3,8 +3,10 @@ import 'package:get/get.dart';
 import '../../../../common/dialog_box_massages/full_screen_loader.dart';
 import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
 import '../../../../common/widgets/network_manager/network_manager.dart';
+import '../../../../data/repositories/firebase/authentication/firebase_auth_repository.dart';
 import '../../../../data/repositories/mongodb/authentication/authentication_repositories.dart';
 import '../../../../utils/constants/image_strings.dart';
+import '../../../personalization/models/user_model.dart';
 import '../authentication_controller/authentication_controller.dart';
 import '../login_controller/login_controller.dart';
 
@@ -13,7 +15,7 @@ class SocialLoginController extends GetxController{
 
   final mongoAuthenticationRepository = Get.put(MongoAuthenticationRepository());
   final userController = Get.put(AuthenticationController());
-  final loginController = Get.put(LoginController());
+  final firebaseAuthRepository = Get.put(FirebaseAuthRepository());
 
   //Google SignIn Authentication
   Future<void> signInWithGoogle() async {
@@ -27,12 +29,12 @@ class SocialLoginController extends GetxController{
         return;
       }
       // Google Authentication
-      // final userCredentials = await authenticationRepository.signInWithGoogle();
-      // googleEmail = userCredentials.user?.email ?? ''; // Assign the value here
-      // final UserModel user = await mongoAuthenticationRepository.fetchCustomerByEmail(email: googleEmail);
+      final userCredentials = await firebaseAuthRepository.signInWithGoogle();
+      googleEmail = userCredentials.user?.email ?? ''; // Assign the value here
+      final UserModel user = await mongoAuthenticationRepository.fetchUserByEmail(email: googleEmail);
 
-      // TFullScreenLoader.stopLoading();
-      // authenticationRepository.login(user: user);
+      FullScreenLoader.stopLoading();
+      userController.login(user: user);
     } catch (error) {
       // Remove Loader
       FullScreenLoader.stopLoading();
@@ -41,6 +43,3 @@ class SocialLoginController extends GetxController{
     }
   }
 }
-
-//TODO
-// google login

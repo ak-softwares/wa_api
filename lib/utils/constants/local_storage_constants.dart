@@ -10,6 +10,7 @@ class LocalStorageName{
   static const String authUserID          = 'AUTH_USER_ID';
   static const String loginExpiry         = 'LOGIN_EXPIRY';
   static const String userData            = 'USER_DATA';
+  static const String subscribedToAllUsers            = 'subscribedToAllUsers';
 
   static const String themeMode          = 'THEME_MODE';
 

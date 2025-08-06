@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../common/navigation_bar/bottom_navigation_bar.dart';
@@ -7,6 +8,10 @@ import '../../features/authentication/screens/phone_otp_login/mobile_login_scree
 class NavigationHelper {
   static void navigateToBottomNavigation() {
     Get.offAll(() => const BottomNavigation());
+  }
+
+  static Widget navigateToBottomNavigationWidget() {
+    return BottomNavigation();
   }
 
   static void navigateToLoginScreen() {

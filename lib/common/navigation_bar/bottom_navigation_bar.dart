@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../features/chat/screens/chats/chats.dart';
 import '../../features/personalization/screens/user_menu/user_menu_screen.dart';
 
+import '../../routes/routes.dart';
 import '../../utils/constants/icons.dart';
 import '../dialog_box_massages/snack_bar_massages.dart';
 
@@ -26,6 +27,19 @@ class _BottomNavigationState extends State<BottomNavigation> {
     const UserMenuScreen(),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+
+    // Execute after the first frame is rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.route != null) {
+        final route = AppRouter.handleRoute(route: widget.route ?? '/');
+        if(route != null) Navigator.push(context, route);
+      }
+    });
+
+  }
 
   @override
   Widget build(BuildContext context) {

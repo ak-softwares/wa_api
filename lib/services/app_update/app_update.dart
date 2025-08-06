@@ -1,7 +1,7 @@
 import 'package:in_app_update/in_app_update.dart';
 
 class AppUpdate {
-  Future<void> checkForUpdate() async {
+  static Future<void> checkForUpdate() async {
     // print('checking for Update');
     InAppUpdate.checkForUpdate().then((info) async {
       if (info.updateAvailability == UpdateAvailability.updateAvailable) {
