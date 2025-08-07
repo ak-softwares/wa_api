@@ -1,6 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wa_api/utils/formatters/formatters.dart';
 
+import '../../../../../common/text/clickable_text.dart';
 import '../../../../../utils/constants/colors.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -40,22 +44,14 @@ class MessageBubble extends StatelessWidget {
             ),
             child: Stack(
               children: [
-                RichText(
-                  text: TextSpan(
-                    style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
-                    children: [
-                      TextSpan(text: message),
-                      WidgetSpan(child: SizedBox(width: 70)),
-                    ],
-                  ),
-                ),
+                ClickableTextMessage(message: message),
                 Positioned(
                   bottom: -3,
                   right: 0,
                   child: Row(
                     spacing: 4,
                     children: [
-                      Text(AppFormatter.formatDateAsTime(time), style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                      Text(AppFormatter.formatDateAsTime(time), style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                       // if (isMe)
                       //   Icon(Icons.done_all, size: 16, color: Colors.grey[600]),
                     ],

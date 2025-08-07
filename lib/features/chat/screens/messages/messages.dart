@@ -100,6 +100,32 @@ class Messages extends StatelessWidget {
           ],
         ),
       ),
+      // bottomNavigationBar: auth.user.value.mongoDbCredentials?.collectionName == null
+      //     ? Container(
+      //     width: double.infinity,
+      //     color: Colors.white,
+      //     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      //     child: Row(
+      //       spacing: 20,
+      //       children: [
+      //         Expanded(child: Text('Please Setup Facebook API for send Message', maxLines: 2,)),
+      //         SizedBox(
+      //           width: 100,
+      //           child: ElevatedButton(
+      //               onPressed: () => Get.to(() => FBApiSetup()),
+      //               child: Text('Setup')
+      //           ),
+      //         )
+      //       ],
+      //     )
+      // )
+      //     : Padding(
+      //         padding: AppSpacingStyle.defaultPageHorizontal,
+      //         child: ChatInputBar(
+      //           controller: controller.messageController,
+      //           onSend: () => controller.sendMessage(),
+      //         ),
+      //       ),
       body: RefreshIndicator(
         color: AppColors.refreshIndicator,
         onRefresh: () async => controller.refreshMessages(),

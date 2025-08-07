@@ -6,7 +6,8 @@ import 'package:get_storage/get_storage.dart';
 import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
 import '../../../../data/repositories/user_mongodb/chats_repository/chats_repository.dart';
 import '../../../authentication/controllers/authentication_controller/authentication_controller.dart';
-import '../../models/chats_model.dart';
+import '../../models/chat_model.dart';
+import '../new_chat/new_chat_controller.dart';
 
 class ChatsController extends GetxController {
   static ChatsController get instance => Get.find();
@@ -19,6 +20,7 @@ class ChatsController extends GetxController {
   RxList<ChatModel> chats = <ChatModel>[].obs;
 
   final chatsRepository = Get.put(ChatsRepository());
+  final newChatController = Get.put(NewChatController());
   final authenticationController = Get.put(AuthenticationController());
   final localStorage = GetStorage();
 
@@ -55,6 +57,16 @@ class ChatsController extends GetxController {
       final List<ChatModel> newChats = await chatsRepository.fetchAllChats(page: currentPage.value);
       if (newChats.isEmpty || newChats.length < 10) {
         hasMoreChats(false); // No more messages to load
+      }
+      // Assign name if sessionId matches with contact number
+      for (var chat in newChats) {
+        final matchingContact = newChatController.contacts.firstWhereOrNull((contact) {
+          return contact.phoneNumbers.contains(chat.sessionId);
+        });
+
+        if (matchingContact != null) {
+          chat.name = matchingContact.name;
+        }
       }
       chats.addAll(newChats);
     } catch (e) {

@@ -409,6 +409,7 @@ class PaymentMethodName {
 class ChatsFieldName {
   static const String id = '_id';
   static const String sessionId = 'sessionId';
+  static const String name = 'name';
   static const String messages = 'messages';
   static const String lastModified = 'lastModified';
   static const String lastSeenIndex = 'lastSeenIndex';
@@ -421,6 +422,14 @@ class MessageFieldName {
   static const String content = 'content';
   static const String timestamp = 'timestamp';
   static const String messageIndex = 'messageIndex';
+}
+
+class ContactFieldName {
+  static const String name = 'name';
+  static const String phoneNumbers = 'phoneNumbers';
+  static const String emails = 'emails';
+  static const String photo = 'photo';
+  static const String isStarred = 'isStarred';
 }
 
 class PaymentMethodTitle {

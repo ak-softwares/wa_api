@@ -68,4 +68,30 @@ class AppFormatter {
     }
     return phoneNumber;
   }
+
+  static String formatPhoneNumberForWA(String input) {
+    // Remove any non-digit characters (just in case)
+    input = input.replaceAll(RegExp(r'\D'), '');
+
+    // Assume country codes are 1 to 3 digits, e.g., 1 (US), 44 (UK), 91 (India)
+    String countryCode = '';
+    String numberPart = '';
+
+    if (input.length > 10) {
+      // Assuming last 10 digits are local number
+      countryCode = input.substring(0, input.length - 10);
+      numberPart = input.substring(input.length - 10);
+    } else {
+      // No country code, treat full input as number
+      numberPart = input;
+    }
+
+    // Format local number as: XX XXXX XXXX
+    if (numberPart.length == 10) {
+      numberPart = '${numberPart.substring(0, 2)} ${numberPart.substring(2, 6)} ${numberPart.substring(6)}';
+    }
+
+    return '+$countryCode $numberPart';
+  }
+
 }

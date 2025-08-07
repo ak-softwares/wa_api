@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 import '../../../../features/authentication/controllers/authentication_controller/authentication_controller.dart';
-import '../../../../features/chat/models/chats_model.dart';
+import '../../../../features/chat/models/chat_model.dart';
 import '../../../../utils/constants/api_constants.dart';
 import '../../../database/users_mongo_db/user_mongo_fetch.dart';
 import '../../../database/users_mongo_db/user_mongo_update.dart';

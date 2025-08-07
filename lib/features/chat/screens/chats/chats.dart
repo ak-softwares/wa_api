@@ -13,6 +13,7 @@ import '../../../settings/app_settings.dart';
 import '../../../setup/screens/mongo_db_setup.dart';
 import '../../controllers/chats/chats_controller.dart';
 import '../messages/messages.dart';
+import '../new_chat/new_chat.dart';
 import '../search/widgets/search_bar.dart';
 import 'widgets/chat_simmer.dart';
 import 'widgets/chat_tile.dart';
@@ -56,6 +57,16 @@ class Chats extends StatelessWidget {
             ),
           ],
         )
+      ),
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'chat',
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(17), // Fully circular
+        ),
+        backgroundColor: AppColors.whatsAppColor,
+        onPressed: () => Get.to(() => NewChat()),
+        tooltip: 'New Chat',
+        child: const Icon(Icons.chat_outlined, size: 25, color: Colors.white),
       ),
       body: RefreshIndicator(
         color: AppColors.refreshIndicator,

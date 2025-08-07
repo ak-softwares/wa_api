@@ -7,7 +7,7 @@ import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/enums.dart';
 import '../../../../../utils/constants/sizes.dart';
 import '../../../../../utils/formatters/formatters.dart';
-import '../../../models/chats_model.dart';
+import '../../../models/chat_model.dart';
 
 class ChatTile extends StatelessWidget {
   const ChatTile({super.key, required this.chat, this.onTap});
@@ -55,7 +55,7 @@ class ChatTile extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(chat.sessionId, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                      Text(chat.name != null ? chat.name ?? '' : AppFormatter.formatPhoneNumberForWA(chat.sessionId), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                       Text(AppFormatter.formatDateAsTime(chat.lastModified), style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8))),
                     ],
                   ),
