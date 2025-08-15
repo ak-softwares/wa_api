@@ -2,29 +2,34 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../../../common/dialog_box_massages/full_screen_loader.dart';
 import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
 import '../../../../common/widgets/network_manager/network_manager.dart';
+import '../../../../data/repositories/firebase/authentication/firebase_auth_repository.dart';
 import '../../../../data/repositories/mongodb/authentication/authentication_repositories.dart';
 import '../../../../data/repositories/whatsapp/authentication/whatsapp_auth_repo.dart';
-import '../../../../utils/constants/image_strings.dart';
-import '../../../../utils/validators/validation.dart';
-import '../authentication_controller/authentication_controller.dart';
+import '../../../../utils/constants/local_storage_constants.dart';
+import '../../../../utils/data/state_iso_code_map.dart';
+import '../../../../utils/formatters/formatters.dart';
 import '../../../personalization/models/user_model.dart';
 import '../../../settings/app_settings.dart';
-import '../../screens/phone_otp_login/enter_otp_screen.dart';
 
 class OTPController extends GetxController {
   static OTPController get instance => Get.find();
 
   Rx<bool> isLoading = false.obs;
-  Rx<bool> isPhoneVerified = false.obs;
-  Rx<String> countryCode = ''.obs;
-  Rx<String> phoneNumber = ''.obs;
-
+  Rx<bool> isSocialLogin = false.obs;
+  RxBool showOTPField = false.obs;
+  final countryCode = TextEditingController();
+  RxString countryISO = ''.obs;
+  final rememberMe = true.obs; //Observable for Remember me checked or not
+  final phoneNumber = TextEditingController();
   final otp = TextEditingController();
+  RxInt countdownTimer = 60.obs;
+  final localStorage = GetStorage();
+  GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
 
   // Otp variables
   int otpLength = AppSettings.otpLength;
@@ -46,17 +51,34 @@ class OTPController extends GetxController {
   String saveGenerateOTP = '';
 
   final mongoAuthenticationRepository = Get.put(MongoAuthenticationRepository());
-  final userController = Get.put(AuthenticationController());
-
+  final firebaseAuthRepository = Get.put(FirebaseAuthRepository());
 
   @override
-  void onClose() {
-    super.onClose();
-    otp.dispose();
+  onInit() {
+    super.onInit();
+    _initialized();
+    showOTPField(false);
   }
 
+  @override
+  dispose() {
+    super.dispose();
+    showOTPField(false);
+  }
+
+  Future<void> _initialized() async {
+    String? rememberedPhone = localStorage.read(LocalStorageName.rememberMePhone);
+    if(rememberedPhone == null) return;
+    await CountryData.loadFromAssets(); // MUST await
+    var c = CountryData.fromFullNumber(rememberedPhone);
+    phoneNumber.text = c?.phoneNumber ?? '';
+    countryCode.text = c?.dialCode ?? '';
+    countryISO.value = c?.iso ?? 'IN';
+  }
+
+
   // Send OTP through WhatsApp API
-  Future<void> whatsappSendOtp({required String phone}) async {
+  Future<void> whatsappSendOtp({required String countryCode, required String phoneNumber}) async {
     try {
       isLoading(true);
 
@@ -68,7 +90,7 @@ class OTPController extends GetxController {
       }
 
       // Format and validate phone
-      String fullPhoneNumber = Validator.formatPhoneNumberForWhatsAppOTP(countryCode: countryCode.value, phoneNumber: phone);
+      String fullPhoneNumber = AppFormatter.formatPhoneNumberForWhatsAppOTP(countryCode: countryCode, phoneNumber: phoneNumber);
 
       // Rate limiting logic
       final now = DateTime.now();
@@ -93,74 +115,51 @@ class OTPController extends GetxController {
       _generateAndStoreOtp();
       await WhatsappAuthRepo.sendOtp(phoneNumber: fullPhoneNumber, otp: _generatedOtp);
 
-      // Navigate to OTP screen
-      Get.to(() => const EnterOTPScreen());
-
     } catch (error) {
-      AppMassages.errorSnackBar(title: 'Oh Snap!', message: error.toString());
+      rethrow;
     } finally {
       isLoading(false);
     }
   }
 
-  Future<void> verifyOtp(String otp) async {
-    String phone = ''; // Initialize with an empty string
+  Future<UserModel> verifyOtp({required String otp, required String countryCode, required String phoneNumber}) async {
     try {
       // Start Loading
-      FullScreenLoader.openLoadingDialog('Logging you in...', Images.docerAnimation);
+      isLoading(true);
 
-      final isConnected = await Get.put(NetworkManager()).isConnected();
-      if (!isConnected) {
-        FullScreenLoader.stopLoading();
-        return;
-      }
-
-      phone = phoneNumber.value;
-      String? formattedPhone = Validator.getFormattedTenDigitNumber(phone);
-      if (formattedPhone == null) {
-        FullScreenLoader.stopLoading();
-        AppMassages.errorSnackBar(title: 'Error', message: 'No 10-digit number found');
-        return;
-      }
+      String fullPhoneNumber = AppFormatter.formatPhoneNumberForWhatsAppOTP(countryCode: countryCode, phoneNumber: phoneNumber);
 
       // Check brute-force protection
       final now = DateTime.now();
-      final attempts = _otpVerificationAttempts[formattedPhone] ?? [];
+      final attempts = _otpVerificationAttempts[fullPhoneNumber] ?? [];
 
       // Keep only recent attempts within the time window
       final recentAttempts = attempts.where((t) => now.difference(t) < attemptWindow).toList();
 
       if (recentAttempts.length >= maxVerificationAttempts) {
-        FullScreenLoader.stopLoading();
-        AppMassages.errorSnackBar(
-          title: 'Too Many Attempts',
-          message: 'Too many incorrect attempts. Try again later.',
-        );
-        return;
+        throw Exception('Too many incorrect attempts. Try again later.');
       }
 
       // Verify OTP
       if (!_isOtpValid(otp)) {
         recentAttempts.add(now); // Log failed attempt
-        _otpVerificationAttempts[formattedPhone] = recentAttempts;
-
-        FullScreenLoader.stopLoading();
-        AppMassages.errorSnackBar(title: 'Error', message: 'Invalid OTP');
-        return;
+        _otpVerificationAttempts[fullPhoneNumber] = recentAttempts;
+        throw Exception('Invalid OTP');
       }
 
       // OTP is valid — clear attempts
-      _otpVerificationAttempts.remove(formattedPhone);
+      _otpVerificationAttempts.remove(fullPhoneNumber);
 
-      final UserModel admin = await mongoAuthenticationRepository.fetchUserByPhone(phone: formattedPhone);
+      final UserModel user = await mongoAuthenticationRepository.fetchUserByPhone(phone: fullPhoneNumber);
 
-      isPhoneVerified.value = true;
-      FullScreenLoader.stopLoading();
-      userController.login(user: admin);
+      if(rememberMe.value){
+        localStorage.write(LocalStorageName.rememberMePhone, fullPhoneNumber);
+      }
+      return user;
     } catch (error) {
-      FullScreenLoader.stopLoading();
-      await GoogleSignIn().signOut();
-      AppMassages.errorSnackBar(title: 'Error', message: error.toString());
+      rethrow;
+    } finally {
+      isLoading(false);
     }
   }
 
@@ -185,4 +184,27 @@ class OTPController extends GetxController {
     }
     return otp;
   }
+
+  Future<UserModel> signInWithGoogle() async {
+    String googleEmail = ''; // Initialize with an empty string
+    try {
+      // Start Loading
+      isSocialLogin(true);
+      final isConnected = await NetworkManager.instance.isConnected();
+      if (!isConnected) {
+          throw Exception('No Internet');
+      }
+      // Google Authentication
+      final userCredentials = await firebaseAuthRepository.signInWithGoogle();
+      googleEmail = userCredentials.user?.email ?? ''; // Assign the value here
+      final UserModel user = await mongoAuthenticationRepository.fetchUserByEmail(email: googleEmail);
+      return user;
+    } catch (error) {
+      await GoogleSignIn().signOut();
+      rethrow;
+    }finally{
+      isSocialLogin(false);
+    }
+  }
+
 }

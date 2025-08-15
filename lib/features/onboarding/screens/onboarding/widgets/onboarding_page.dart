@@ -18,8 +18,8 @@ class OnBoardingPage extends StatelessWidget {
       child: Column(
         children: [
           Image(
-              width: THelperFunctions.screenWidth(context) * 0.8,
-              height: THelperFunctions.screenHeight(context) * 0.6,
+              width: HelperFunctions.screenWidth(context) * 0.8,
+              height: HelperFunctions.screenHeight(context) * 0.6,
               image: AssetImage(image)
           ),
           Text(title, style: Theme.of(context).textTheme.headlineMedium, textAlign: TextAlign.center),

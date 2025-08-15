@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
+
 class StateData{
   // Method to get the state name from the ISO code
   static String getStateFromISOCode(String isoCode) {
@@ -78,52 +81,64 @@ class StateData{
 }
 
 class CountryData {
-  // Method to get the country name from the ISO code
-  static String getCountryFromISOCode(String isoCode) {
-    return countryISOCodeMap.entries
-        .firstWhere((entry) => entry.value == isoCode, orElse: () => const MapEntry('', ''))
-        .key;
+  final String country;
+  final String iso;
+  final String dialCode;
+  final String? phoneNumber;
+
+  CountryData({
+    required this.country,
+    required this.iso,
+    required this.dialCode,
+    this.phoneNumber,
+  });
+
+  static List<CountryData> _countries = [];
+
+  static Future<void> loadFromAssets() async {
+    final jsonStr = await rootBundle.loadString('assets/jsons/country_dial_codes.json');
+    final List<dynamic> data = json.decode(jsonStr);
+
+    _countries = data
+        .map((e) => CountryData(
+      country: e['name'],
+      iso: e['code'],
+      dialCode: e['dial_code'].replaceAll('+', ''), // cleanup
+    )).toList();
   }
 
-  // Method to get the ISO code from the country name
-  static String getISOFromCountry(String country) {
-    return countryISOCodeMap[country] ?? '';
+  static CountryData? fromFullNumber(String fullNumber) {
+    if (_countries.isEmpty) {
+      throw Exception('Country data not loaded. Call loadFromAssets() first.');
+    }
+
+    fullNumber = fullNumber.replaceAll('+', '');
+
+    _countries.sort((a, b) => b.dialCode.length.compareTo(a.dialCode.length));
+
+    for (var c in _countries) {
+      if (fullNumber.startsWith(c.dialCode)) {
+        return c.copyWith(
+          phoneNumber: fullNumber.substring(c.dialCode.length),
+        );
+      }
+    }
+    return null;
   }
 
-  static final List<String> countries = countryISOCodeMap.keys.toList();
-
-  static final Map<String, String> countryISOCodeMap = {
-    'India': 'IN',
-    'China': 'CN',
-    'United States': 'US',
-    'Australia': 'AU',
-    'Singapore': 'SG',
-    'United Kingdom': 'GB',
-    'Canada': 'CA',
-    'Germany': 'DE',
-    'Japan': 'JP',
-    'South Korea': 'KR',
-    'France': 'FR',
-    'Italy': 'IT',
-    'Brazil': 'BR',
-    'Spain': 'ES',
-    'Netherlands': 'NL',
-    'Switzerland': 'CH',
-    'Thailand': 'TH',
-    'Sweden': 'SE',
-    'Indonesia': 'ID',
-    'Saudi Arabia': 'SA',
-    'Mexico': 'MX',
-    'Turkey': 'TR',
-    'Poland': 'PL',
-    'Iran': 'IR',
-    'Belgium': 'BE',
-    'Norway': 'NO',
-    'Austria': 'AT',
-    'United Arab Emirates': 'AE',
-    'South Africa': 'ZA',
-    'Denmark': 'DK',
-  };
-
+  CountryData copyWith({
+    String? country,
+    String? iso,
+    String? dialCode,
+    String? phoneNumber,
+  }) {
+    return CountryData(
+      country: country ?? this.country,
+      iso: iso ?? this.iso,
+      dialCode: dialCode ?? this.dialCode,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+    );
+  }
 }
+
 

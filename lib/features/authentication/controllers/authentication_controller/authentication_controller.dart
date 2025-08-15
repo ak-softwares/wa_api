@@ -201,7 +201,6 @@ class AuthenticationController extends GetxController {
   Future<UserModel?> loadUserFromLocal() async {
     final prefs = await SharedPreferences.getInstance();
     final userJson = prefs.getString(LocalStorageName.userData);
-
     if (userJson != null) {
       final Map<String, dynamic> jsonMap = jsonDecode(userJson);
       return UserModel.fromJson(jsonMap, isLocal: true);

@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
-import '../../../../data/repositories/user_mongodb/chats_repository/chats_repository.dart';
+import '../../../../data/repositories/mongodb/chats_repository/chats_repository.dart';
 import '../../../authentication/controllers/authentication_controller/authentication_controller.dart';
 import '../../models/chat_model.dart';
 import '../new_chat/new_chat_controller.dart';
@@ -19,9 +17,9 @@ class ChatsController extends GetxController {
   RxBool hasMoreChats = true.obs;
   RxList<ChatModel> chats = <ChatModel>[].obs;
 
-  final chatsRepository = Get.put(ChatsRepository());
   final newChatController = Get.put(NewChatController());
-  final authenticationController = Get.put(AuthenticationController());
+  final auth = Get.put(AuthenticationController());
+  final chatsRepository = Get.put(ChatsRepository());
   final localStorage = GetStorage();
 
   @override
@@ -77,7 +75,6 @@ class ChatsController extends GetxController {
   // Refresh chats
   Future<void> refreshChats() async {
     try {
-      if(authenticationController.user.value.mongoDbCredentials?.collectionName == null) return;
       isLoading(true);
       hasMoreChats(true); // No more messages to load
       currentPage.value = 1; // Reset page number

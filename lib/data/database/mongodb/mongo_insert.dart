@@ -1,4 +1,5 @@
 import 'package:mongo_dart/mongo_dart.dart';
+import '../../../utils/constants/db_constants.dart';
 import 'mongo_base.dart';
 
 class MongoInsert extends MongoDatabase {
@@ -26,30 +27,23 @@ class MongoInsert extends MongoDatabase {
     }
   }
 
-
-
-
-  // Insert multiple documents
-  Future<void> insertDocuments(String collectionName, List<Map<String, dynamic>> dataList) async {
+  Future<void> insertMessageToSession({
+    required String collectionName,
+    required String sessionId,
+    required Map<String, dynamic> message,
+    int? lastSeenIndex,
+  }) async {
     await _ensureConnected();
     try {
-      await db!.collection(collectionName).insertMany(dataList);
+      await db!.collection(collectionName).update(
+        where.eq(ChatsFieldName.sessionId, sessionId),
+        modify.push(ChatsFieldName.messages, message)
+            .set(ChatsFieldName.lastModified, DateTime.now().toUtc())
+            .set(ChatsFieldName.lastSeenIndex, lastSeenIndex),
+        upsert: true, // <-- insert if not found
+      );
     } catch (e) {
-      throw Exception('Failed to insert documents: $e');
-    }
-  }
-
-  Future<String> insertDocumentGetId(String collectionName, Map<String, dynamic> data) async {
-    await _ensureConnected();
-    try {
-      final result = await db!.collection(collectionName).insertOne(data);
-      if (result.isSuccess && result.id != null) {
-        return (result.id as ObjectId).toHexString();
-      } else {
-        throw Exception('Insert failed.');
-      }
-    } catch (e) {
-      throw Exception('Failed to insert document: $e');
+      throw Exception('Failed to insert message: $e');
     }
   }
 }

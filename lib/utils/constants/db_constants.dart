@@ -1,9 +1,9 @@
 
 class DbCollections{
   static const String users  = 'users';
+  static const String chats  = 'chats';
   static const String n8nChatHistories  = 'n8n_chat_histories';
 }
-
 
 class PurchaseListFieldName {
   static const String id = '_id';
@@ -450,8 +450,9 @@ class UserFieldConstants {
   static const String dateModified = 'dateModified';
   static const String address = 'billing';
   static const String fCMToken = 'fCMToken';
-  static const String mongoDbCredentials = 'mongoDbCredentials';
   static const String fBApiCredentials = 'fBApiCredentials';
+  static const String isN8nUser = 'isN8nUser';
+  static const String mongoDbCredentials = 'mongoDbCredentials';
 
 }
 

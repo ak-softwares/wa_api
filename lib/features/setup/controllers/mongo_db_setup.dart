@@ -13,6 +13,7 @@ import '../models/mongo_db_credentials.dart';
 class MongoDbSetupController extends GetxController {
   static MongoDbSetupController get instance => Get.find();
 
+  RxBool isN8NSwitched = false.obs;
   final connectionString = TextEditingController();
   final dataBaseName = TextEditingController();
   final collectionName = TextEditingController();
@@ -28,6 +29,7 @@ class MongoDbSetupController extends GetxController {
   }
 
   void initialize() {
+    isN8NSwitched.value = auth.user.value.isN8nUser ?? false;
     connectionString.text = auth.user.value.mongoDbCredentials?.connectionString ?? '';
     dataBaseName.text = auth.user.value.mongoDbCredentials?.dataBaseName ?? '';
     collectionName.text = auth.user.value.mongoDbCredentials?.collectionName ?? '';
@@ -72,6 +74,21 @@ class MongoDbSetupController extends GetxController {
     } catch (error) {
       //remove Loader
       FullScreenLoader.stopLoading();
+      AppMassages.errorSnackBar(title: 'Error', message: error.toString());
+    }
+  }
+
+  Future<void> updateN8NSwitch() async {
+    try {
+      final userData = UserModel(
+        isN8nUser: isN8NSwitched.value,
+      );
+
+      await mongoAuthenticationRepository.updateUserById(id: auth.userId, user: userData);
+
+      await auth.refreshUser();
+
+    } catch (error) {
       AppMassages.errorSnackBar(title: 'Error', message: error.toString());
     }
   }

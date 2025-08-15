@@ -1,5 +1,5 @@
 import '../../../utils/constants/db_constants.dart';
-import '../../../utils/helpers/encryption_hepler.dart';
+import '../../../utils/helpers/encryption_helper.dart';
 
 class FBApiCredentials {
   final String accessToken;

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../../../features/personalization/models/user_model.dart';
 import '../../../../utils/constants/db_constants.dart';
 import '../../../../utils/constants/enums.dart';
-import '../../../../utils/helpers/encryption_hepler.dart';
+import '../../../../utils/helpers/encryption_helper.dart';
 import '../../../database/mongodb/mongo_delete.dart';
 import '../../../database/mongodb/mongo_fetch.dart';
 import '../../../database/mongodb/mongo_insert.dart';
@@ -176,6 +176,57 @@ class MongoAuthenticationRepository extends GetxController {
       throw 'Failed to update user: $e';
     }
   }
+
+// Update a user document in a collection
+  Future<void> updateUserProfile({
+    required String id,
+    required UserModel newUser,
+    required UserModel oldUser,
+  }) async {
+    try {
+      // Only check for email conflict if it has changed
+      if (newUser.email != null &&
+          newUser.email!.isNotEmpty &&
+          newUser.email != oldUser.email) {
+        final existingEmailUser = await _mongoFetch.findOne(
+          collectionName: collectionName,
+          filter: {
+            UserFieldConstants.email: newUser.email,
+            r'_id': {r'$ne': id}, // exclude current user
+          },
+        );
+        if (existingEmailUser != null) {
+          throw 'Email already exists';
+        }
+      }
+
+      // Only check for phone conflict if it has changed
+      if (newUser.phone != null &&
+          newUser.phone!.isNotEmpty &&
+          newUser.phone != oldUser.phone) {
+        final existingPhoneUser = await _mongoFetch.findOne(
+          collectionName: collectionName,
+          filter: {
+            UserFieldConstants.phone: newUser.phone,
+            r'_id': {r'$ne': id}, // exclude current user
+          },
+        );
+        if (existingPhoneUser != null) {
+          throw 'Phone number already exists';
+        }
+      }
+
+      // Perform the update
+      await _mongoUpdate.updateDocumentById(
+        collectionName: collectionName,
+        id: id,
+        updatedData: newUser.toMap(),
+      );
+    } catch (e) {
+      throw 'Failed to update user: $e';
+    }
+  }
+
 
   // Delete a purchase
   Future<void> deleteUser({required String id}) async {

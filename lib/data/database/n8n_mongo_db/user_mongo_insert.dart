@@ -1,16 +1,16 @@
 import 'package:mongo_dart/mongo_dart.dart';
 
 import '../../../utils/constants/db_constants.dart';
-import 'user_mongo_base.dart';
+import 'n8n_mongo_base.dart';
 
-class UserMongoInsert extends UsersMongoDatabase {
+class UserMongoInsert extends N8nMongoDatabase {
   // Singleton implementation
   static final UserMongoInsert _instance = UserMongoInsert._internal();
   factory UserMongoInsert() => _instance;
   UserMongoInsert._internal();
 
   Future<void> _ensureConnected() async {
-    await UsersMongoDatabase.ensureConnected();
+    await N8nMongoDatabase.ensureConnected();
   }
 
   // Insert a single document

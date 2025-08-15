@@ -1,10 +1,9 @@
 import 'package:mongo_dart/mongo_dart.dart';
 
 import '../../../utils/constants/db_constants.dart';
-import '../../../utils/helpers/encryption_hepler.dart';
+import '../../../utils/helpers/encryption_helper.dart';
 import '../../setup/models/fb_api_credentials.dart';
 import '../../setup/models/mongo_db_credentials.dart';
-import 'address_model.dart';
 
 class UserModel {
   String? id;
@@ -12,12 +11,12 @@ class UserModel {
   String? password;
   String? name;
   String? phone;
-  AddressModel? address;
   DateTime? dateCreated;
   DateTime? dateModified;
   String? fCMToken;
-  MongoDbCredentials? mongoDbCredentials;
   FBApiCredentials? fBApiCredentials;
+  bool? isN8nUser;
+  MongoDbCredentials? mongoDbCredentials;
 
   UserModel({
     this.id,
@@ -25,12 +24,12 @@ class UserModel {
     this.password,
     this.name,
     this.phone,
-    this.address,
     this.dateCreated,
     this.dateModified,
     this.fCMToken,
-    this.mongoDbCredentials,
     this.fBApiCredentials,
+    this.isN8nUser,
+    this.mongoDbCredentials,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json, {bool isLocal = false}) {
@@ -43,7 +42,6 @@ class UserModel {
       password: json[UserFieldConstants.password],
       name: json[UserFieldConstants.name],
       phone: json[UserFieldConstants.phone] ?? (json[UserFieldConstants.address]?[UserFieldConstants.phone] ?? ''),
-      address: AddressModel.fromJson(json[UserFieldConstants.address] ?? {}),
       dateCreated: isLocal && json[UserFieldConstants.dateCreated] != null
           ? DateTime.parse(json[UserFieldConstants.dateCreated])
           : json[UserFieldConstants.dateCreated],
@@ -54,6 +52,7 @@ class UserModel {
       mongoDbCredentials: json[UserFieldConstants.mongoDbCredentials] != null
           ? MongoDbCredentials.fromJson(json[UserFieldConstants.mongoDbCredentials])
           : null,
+      isN8nUser: json[UserFieldConstants.isN8nUser],
       fBApiCredentials: json[UserFieldConstants.fBApiCredentials] != null
           ? FBApiCredentials.fromJson(json[UserFieldConstants.fBApiCredentials])
           : null,
@@ -72,11 +71,12 @@ class UserModel {
     addIfNotNull(UserFieldConstants.name, name);
     addIfNotNull(UserFieldConstants.password, EncryptionHelper.hashPassword(password: password ?? ''));
     addIfNotNull(UserFieldConstants.phone, phone);
-    addIfNotNull(UserFieldConstants.address, address?.toMap());
     addIfNotNull(UserFieldConstants.dateCreated, isLocal ? dateCreated?.toIso8601String() : dateCreated);
     addIfNotNull(UserFieldConstants.dateModified, isLocal ? dateModified?.toIso8601String() : dateModified);
-    addIfNotNull(UserFieldConstants.mongoDbCredentials, mongoDbCredentials?.toJson());
+    addIfNotNull(UserFieldConstants.fCMToken, fCMToken);
     addIfNotNull(UserFieldConstants.fBApiCredentials, fBApiCredentials?.toJson());
+    addIfNotNull(UserFieldConstants.isN8nUser, isN8nUser);
+    addIfNotNull(UserFieldConstants.mongoDbCredentials, mongoDbCredentials?.toJson());
 
     return map;
   }

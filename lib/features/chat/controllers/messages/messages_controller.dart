@@ -4,7 +4,7 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 
 import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
-import '../../../../data/repositories/user_mongodb/messages_repository/messages_repository.dart';
+import '../../../../data/repositories/mongodb/messages_repository/messages_repository.dart';
 import '../../../../utils/constants/api_constants.dart';
 import '../../../../utils/constants/enums.dart';
 import '../../../authentication/controllers/authentication_controller/authentication_controller.dart';
@@ -105,7 +105,7 @@ class MessagesController extends GetxController {
         type: UserType.ai,
         data: MessageData(content: textMessage),
         timestamp: DateTime.now(),
-        messageIndex: messages.last.messageIndex! + 1,
+        messageIndex: messages.isEmpty ? 1 : (messages.last.messageIndex ?? 0) + 1,
       );
 
       messages.add(message);

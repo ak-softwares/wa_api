@@ -1,78 +1,101 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:timer_count_down/timer_count_down.dart';
-
+import 'package:iconsax/iconsax.dart';
 import '../../../../common/navigation_bar/appbar.dart';
-import '../../../../utils/constants/colors.dart';
-import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/sizes.dart';
-import '../../../../utils/constants/text_strings.dart';
-import '../../../../utils/helpers/helper_functions.dart';
-import '../../controllers/login_controller/forget_password_controller.dart';
-import 'email_login.dart';
+import '../../../personalization/models/user_model.dart';
+import '../../controllers/reset_password_controller/reset_password_controller.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
-  const ResetPasswordScreen({super.key, required this.email});
+  const ResetPasswordScreen({super.key, required this.user});
 
-  final String email;
+  final UserModel user;
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(ResetPasswordController());
 
-    int seconds  = 60;
     return Scaffold(
-      appBar: const AppAppBar(title: "Reset Password Link"),
+      appBar: const AppAppBar(title: "Reset Password"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(AppSizes.defaultSpace),
           child: Column(
             children: [
               const SizedBox(height: AppSizes.spaceBtwSection),
-              Image(
-                  image: const AssetImage(Images.deliveredEmailIllustration),
-                  width: THelperFunctions.screenWidth(context) * 0.6,
+              Text(
+                "Enter your new password for ${user.email}",
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSizes.spaceBtwSection),
-              Text(email, style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
-              const SizedBox(height: AppSizes.spaceBtwItems),
-              Text(AppTexts.confirmEmail, style: Theme.of(context).textTheme.headlineMedium, textAlign: TextAlign.center),
-              const SizedBox(height: AppSizes.spaceBtwItems),
-              Text(AppTexts.confirmEmailSubtitle, style: Theme.of(context).textTheme.labelMedium, textAlign: TextAlign.center),
-              const SizedBox(height: AppSizes.spaceBtwItems),
-              //Buttons
-              SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      onPressed: () => Get.to(() => const EmailLoginScreen()),
-                      child: const Text(AppTexts.tContinue)
-                  )
-              ),
+
+              // New Password
+              Obx(() => TextField(
+                controller: controller.passwordController,
+                obscureText: controller.isObscure.value,
+                decoration: InputDecoration(
+                  labelText: "New Password",
+                  prefixIcon: Icon(Iconsax.direct_right),
+                  suffixIcon: IconButton(
+                    icon: Icon(controller.isObscure.value
+                        ? Icons.visibility_off
+                        : Icons.visibility),
+                    onPressed: controller.togglePasswordVisibility,
+                  ),
+                  // Default border (used when not focused)
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                  ),
+
+                  // Border when focused
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                  ),
+                ),
+              )),
+
               const SizedBox(height: AppSizes.inputFieldSpace),
-              Countdown(
-                seconds: seconds,
-                interval: const Duration(milliseconds: 1000),
-                build: (context, currentRemainingTime) {
-                  if(currentRemainingTime == 0.0) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Didn\'t receive Email?',
-                            style: Theme.of(context).textTheme.bodyMedium),
-                        TextButton(
-                            onPressed: () {
-                              currentRemainingTime = seconds.toDouble();
-                              ForgetPasswordController.instance.sendPasswordResetEmail(email);
-                            },
-                            child: Text(AppTexts.resendEmail,
-                                style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: AppColors.linkColor))
-                        ),
-                      ],
-                    );
-                  } else {
-                    return Text('Didn\'t receive Email? Resend in ${currentRemainingTime.toStringAsFixed(0)} Sec',
-                        style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center);
-                  }
-                },
+
+              // Confirm Password
+              Obx(() => TextField(
+                controller: controller.confirmPasswordController,
+                obscureText: controller.isConfirmObscure.value,
+                decoration: InputDecoration(
+                  labelText: "Re-enter Password",
+                  prefixIcon: Icon(Iconsax.direct_right),
+                  suffixIcon: IconButton(
+                    icon: Icon(controller.isConfirmObscure.value
+                        ? Icons.visibility_off
+                        : Icons.visibility),
+                    onPressed:
+                    controller.toggleConfirmPasswordVisibility,
+                  ),
+                  // Default border (used when not focused)
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                  ),
+
+                  // Border when focused
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
+                  ),
+                ),
+              )),
+
+              const SizedBox(height: AppSizes.spaceBtwSection),
+
+              // Submit Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => controller.submit(user: user),
+                  child: const Text("Submit"),
+                ),
               ),
             ],
           ),

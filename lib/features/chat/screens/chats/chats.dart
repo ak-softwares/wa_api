@@ -10,6 +10,7 @@ import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../authentication/controllers/authentication_controller/authentication_controller.dart';
 import '../../../settings/app_settings.dart';
+import '../../../setup/screens/whatsapp_cloud_api.dart';
 import '../../../setup/screens/mongo_db_setup.dart';
 import '../../controllers/chats/chats_controller.dart';
 import '../messages/messages.dart';
@@ -81,13 +82,13 @@ class Chats extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Obx(() {
-              if(auth.user.value.mongoDbCredentials?.collectionName == null) {
+              if(auth.user.value.fBApiCredentials?.accessToken == null) {
                 return AnimationLoaderWidgets(
-                  text: 'Please Setup MongoDB Database',
+                  text: 'Please Setup Whatsapp Cloud API',
                   animation: Images.pencilAnimation,
                   showAction: true,
                   actionText: 'Let\'s setup',
-                  onActionPress: () => Get.to(() => MongoDBSetup()),
+                  onActionPress: () => Get.to(() => WhatsappCloudApi()),
                 );
               }
               else if(controller.isLoading.value){

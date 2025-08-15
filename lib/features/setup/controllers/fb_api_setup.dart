@@ -11,8 +11,8 @@ import '../../personalization/models/user_model.dart';
 import '../models/fb_api_credentials.dart';
 import '../models/mongo_db_credentials.dart';
 
-class FBApiSetupController extends GetxController {
-  static FBApiSetupController get instance => Get.find();
+class WhatsappCloudApiController extends GetxController {
+  static WhatsappCloudApiController get instance => Get.find();
 
   final accessToken = TextEditingController();
   final phoneNumberID = TextEditingController();

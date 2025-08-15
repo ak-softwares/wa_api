@@ -9,6 +9,8 @@ import '../../../data/repositories/mongodb/authentication/authentication_reposit
 import '../../../utils/constants/enums.dart';
 import '../../../utils/constants/image_strings.dart';
 import '../../../utils/constants/local_storage_constants.dart';
+import '../../../utils/data/state_iso_code_map.dart';
+import '../../../utils/formatters/formatters.dart';
 import '../../../utils/validators/validation.dart';
 import '../models/user_model.dart';
 import '../../authentication/controllers/authentication_controller/authentication_controller.dart';
@@ -20,7 +22,9 @@ class ChangeProfileController extends GetxController {
   // variables
   final name = TextEditingController();
   final email = TextEditingController();
-  final phone = TextEditingController();
+  final phoneNumber = TextEditingController();
+  final countryCode = TextEditingController();
+  RxString countryISO = ''.obs;
 
   GlobalKey<FormState> changeProfileFormKey = GlobalKey<FormState>();
 
@@ -34,10 +38,15 @@ class ChangeProfileController extends GetxController {
     _initialized();
   }
 
-  void _initialized() {
+  Future<void> _initialized() async {
     name.text = auth.user.value.name ?? '';
     email.text = auth.user.value.email ?? '';
-    phone.text = Validator.getFormattedTenDigitNumber(auth.user.value.phone ?? '') ?? '';
+    await CountryData.loadFromAssets(); // MUST await
+
+    var c = CountryData.fromFullNumber(auth.user.value.phone ?? '');
+    phoneNumber.text = c?.phoneNumber ?? '';
+    countryCode.text = c?.dialCode ?? '';
+    countryISO.value = c?.iso ?? 'IN';
   }
 
   // Mongo update profile details
@@ -57,13 +66,15 @@ class ChangeProfileController extends GetxController {
         return;
       }
 
-      //update single field user
+      String fullPhoneNumber = AppFormatter.formatPhoneNumberForWhatsAppOTP(countryCode: countryCode.text.trim(), phoneNumber: phoneNumber.text.trim());
+
+      // update single field user
       final updatedUser = UserModel(
           name: name.text.trim(),
           email: email.text.trim(),
-          phone: phone.text.trim(),
+          phone: fullPhoneNumber,
       );
-      await mongoAuthenticationRepository.updateUserById(id: auth.userId, user: updatedUser);
+      await mongoAuthenticationRepository.updateUserProfile(id: auth.userId, newUser: updatedUser, oldUser: auth.user.value);
 
       // update the Rx user value
       auth.user(updatedUser);

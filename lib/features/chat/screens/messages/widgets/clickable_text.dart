@@ -1,8 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:wa_api/utils/helpers/helper_functions.dart';
 
-import '../../utils/constants/colors.dart';
-import '../../utils/helpers/url_launcher_helper.dart';
+import '../../../../../utils/constants/colors.dart';
+import '../../../../../utils/helpers/url_launcher_helper.dart';
 
 class ClickableTextMessage extends StatelessWidget {
   final String message;
@@ -11,6 +12,8 @@ class ClickableTextMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color linkColor = HelperFunctions.isDarkMode(context) ? AppColors.linkColorDark : AppColors.linkColorLight;
+
     final RegExp exp = RegExp(
       r'((?:https?|ftp)://[^\s]+|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|(?:\+?\d{1,3})?[\s.-]?\d{2,5}[\s.-]?\d{3,5}[\s.-]?\d{3,5}|\b(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})',
       caseSensitive: false,
@@ -38,7 +41,7 @@ class ClickableTextMessage extends StatelessWidget {
       spans.add(
         TextSpan(
           text: matchText,
-          style: TextStyle(color: AppColors.linkColor, decoration: TextDecoration.underline, decorationColor: AppColors.linkColor),
+          style: TextStyle(color: linkColor, decoration: TextDecoration.underline, decorationColor: linkColor),
           recognizer: TapGestureRecognizer()
             ..onTap = () async {
               UrlLauncherHelper.openUrlInChrome(url);

@@ -10,6 +10,42 @@ class MongoSearch extends MongoDatabase {
     await MongoDatabase.ensureConnected();
   }
 
+
+  // Search documents with pagination
+  Future<List<Map<String, dynamic>>> fetchDocumentsBySearchQuery({
+    required String collectionName,
+    required String query,
+    int page = 1,
+    int itemsPerPage = 10,
+    Map<String, dynamic>? filter,
+  }) async {
+    await _ensureConnected();
+    try {
+      final pipeline = [
+        {
+          "\$search": {
+            "index": "default",
+            "text": {
+              "query": query,
+              "path": {"wildcard": "*"}
+            }
+          }
+        },
+        if (filter != null && filter.isNotEmpty)
+          {"\$match": filter},
+        {"\$skip": (page - 1) * itemsPerPage},
+        {"\$limit": itemsPerPage}
+      ];
+
+      return await db!
+          .collection(collectionName)
+          .aggregateToStream(pipeline)
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to search documents: $e');
+    }
+  }
+
   Future<List<Map<String, dynamic>>> searchDocumentsByFields1({
     required String collectionName,
     required String searchTerm,

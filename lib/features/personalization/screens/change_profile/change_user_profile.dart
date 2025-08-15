@@ -1,15 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:intl_phone_field/phone_number.dart';
 
 import '../../../../common/navigation_bar/appbar.dart';
 import '../../../../common/styles/spacing_style.dart';
-import '../../../../utils/constants/colors.dart';
+import '../../../../common/widgets/common/input_phone_field.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/constants/text_strings.dart';
 import '../../../../utils/validators/validation.dart';
 import '../../controllers/change_profile_controller.dart';
-import '../../../authentication/controllers/authentication_controller/authentication_controller.dart';
 
 
 class ChangeUserProfile extends StatelessWidget {
@@ -18,6 +21,7 @@ class ChangeUserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ChangeProfileController());
+
     return Scaffold(
       appBar: const AppAppBar(title: "Update Profile", showBackArrow: true),
       bottomNavigationBar: Padding(
@@ -81,26 +85,17 @@ class ChangeUserProfile extends StatelessWidget {
                             )
                         ),
 
-                        // phone
-                        TextFormField(
-                            controller: controller.phone,
-                            validator: (value) => Validator.validatePhoneNumber(value),
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Iconsax.call),
-                              labelText: AppTexts.tPhone,
-                              // Default border (used when not focused)
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
-                                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
-                              ),
-
-                              // Border when focused
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
-                                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
-                              ),
-                            )
-                        ),
+                        Obx(() {
+                          if (controller.countryISO.value.isEmpty) {
+                            return CircularProgressIndicator(); // or SizedBox.shrink()
+                          }
+                          return PhoneNumberField(
+                            phoneController: controller.phoneNumber,
+                            countryCodeController: controller.countryCode,
+                            initialCountryCode: controller.countryISO.value,
+                            // validator: (value) => Validator.validatePhoneNumber(value?.number),
+                          );
+                        })
                       ]
                   )
               ),
@@ -111,4 +106,3 @@ class ChangeUserProfile extends StatelessWidget {
     );
   }
 }
-

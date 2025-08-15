@@ -37,19 +37,6 @@ class MongoUserRepository extends GetxController {
     }
   }
 
-  // Fetch Customer's IDs from MongoDB
-  Future<Set<int>> fetchUserIds({required String userId}) async {
-    try {
-      // Fetch product IDs from MongoDB
-      return await _mongoFetch.fetchDocumentIds(
-          collectionName: collectionName,
-          userId: userId
-      );
-    } catch (e) {
-      throw 'Failed to fetch Customers IDs: $e';
-    }
-  }
-
   // Update a customer
   Future<void> updateUserById({required String userId, required UserModel user}) async {
     try {
@@ -61,17 +48,6 @@ class MongoUserRepository extends GetxController {
       );
     } catch (e) {
       rethrow;
-    }
-  }
-
-
-  // Upload multiple products
-  Future<void> insertUsers({required List<UserModel> customers}) async {
-    try {
-      List<Map<String, dynamic>> customersMaps = customers.map((customer) => customer.toMap()).toList();
-      await _mongoInsert.insertDocuments(collectionName, customersMaps); // Use batch insert function
-    } catch (e) {
-      throw 'Failed to upload customers: $e';
     }
   }
 
@@ -112,41 +88,4 @@ class MongoUserRepository extends GetxController {
     }
   }
 
-
-  // Fetch Product's IDs from MongoDB
-  Future<Set<int>> fetchUsersIds({required String userId}) async {
-    try {
-      // Fetch product IDs from MongoDB
-      return await _mongoFetch.fetchDocumentIds(
-          collectionName: collectionName,
-          userId: userId
-      );
-    } catch (e) {
-      throw 'Failed to fetch users IDs: $e';
-    }
-  }
-
-  // Get the total count of products in the collection
-  Future<int> fetchUsersCount() async {
-    try {
-      int count = await _mongoFetch.fetchCollectionCount(
-        collectionName: collectionName,
-      );
-      return count;
-    } catch (e) {
-      throw 'Failed to fetch users count: $e';
-    }
-  }
-
-  // Get the total count of products in the collection
-  Future<int> fetchAppUserCount({required UserType userType}) async {
-    try {
-      int count = await _mongoFetch.fetchCollectionCount(
-        collectionName: collectionName,
-      );
-      return count;
-    } catch (e) {
-      throw 'Failed to fetch users count: $e';
-    }
-  }
 }

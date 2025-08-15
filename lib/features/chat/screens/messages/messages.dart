@@ -9,7 +9,7 @@ import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/enums.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../authentication/controllers/authentication_controller/authentication_controller.dart';
-import '../../../setup/screens/fb_api_setup.dart';
+import '../../../setup/screens/whatsapp_cloud_api.dart';
 import '../../controllers/messages/messages_controller.dart';
 import '../../models/message_model.dart';
 import 'widgets/input_bar.dart';
@@ -224,29 +224,7 @@ class Messages extends StatelessWidget {
                   ),
                 ),
 
-
-                // Input bar fixed at bottom
-                if(auth.user.value.mongoDbCredentials?.collectionName == null)
-                  Container(
-                    width: double.infinity,
-                    color: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    child: Row(
-                      spacing: 20,
-                      children: [
-                        Expanded(child: Text('Please Setup Facebook API for send Message', maxLines: 2,)),
-                        SizedBox(
-                          width: 100,
-                          child: ElevatedButton(
-                              onPressed: () => Get.to(() => FBApiSetup()),
-                              child: Text('Setup')
-                          ),
-                        )
-                      ],
-                    )
-                  )
-                else
-                  Padding(
+                Padding(
                   padding: AppSpacingStyle.defaultPageHorizontal,
                   child: ChatInputBar(
                     controller: controller.messageController,

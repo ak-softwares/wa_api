@@ -11,44 +11,27 @@ import '../../screens/email_login/reset_password_screen.dart';
 class ForgetPasswordController extends GetxController{
   static ForgetPasswordController get instance => Get.find();
 
-  ///variables
-  final email = TextEditingController();
+  // variables
+  RxString countryISO = ''.obs;
+  RxBool isLoading = false.obs;
+  RxBool showOTPField = false.obs;
+  final phoneNumber = TextEditingController();
+  final countryCode = TextEditingController();
+  final otp = TextEditingController();
   GlobalKey<FormState> forgetPasswordFormKey = GlobalKey<FormState>(); //Form key for form validation
 
-
-  Future<void> sendPasswordResetEmail(String email) async {
-    try {
-      //Start Loading
-      FullScreenLoader.openLoadingDialog('Processing your request..', Images.docerAnimation);
-      //check internet connectivity
-      final isConnected = await NetworkManager.instance.isConnected();
-      if (!isConnected) {
-        //remove Loader
-        FullScreenLoader.stopLoading();
-        return;
-      }
-      // Form Validation
-      if(!forgetPasswordFormKey.currentState!.validate()) {
-        //remove Loader
-        FullScreenLoader.stopLoading();
-        return;
-      }
-
-      // Register user in the Firebase Authentication & save user data in the Firebase
-      // await wooAuthenticationRepository.resetPasswordWithEmail(email);
-
-      //remove Loader
-      FullScreenLoader.stopLoading();
-      AppMassages.showToastMessage(message: 'Reset password email send');
-      Get.to(() => ResetPasswordScreen(email: email));
-    } catch (error) {
-      //remove Loader
-      FullScreenLoader.stopLoading();
-      AppMassages.errorSnackBar(title: 'Error', message: error.toString());
-    }
+  @override
+  void onInit() {
+    super.onInit();
+    showOTPField(false);
   }
+
+  @override
+  dispose() {
+    super.dispose();
+    showOTPField(false);
+  }
+
 }
-
-
 
 

@@ -13,38 +13,6 @@ class Validator {
     return regex.hasMatch(value);
   }
 
-  static String formatPhoneNumberForWhatsAppOTP({required String countryCode,required String phoneNumber}) {
-    // Remove all non-digit characters from both inputs
-    final cleanedCountryCode = countryCode.replaceAll(RegExp(r'[^0-9]'), '');
-    final cleanedPhoneNumber = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
-
-    // Validate inputs
-    if (cleanedCountryCode.isEmpty) {
-      throw FormatException('Country code is required');
-    }
-
-    if (cleanedPhoneNumber.isEmpty) {
-      throw FormatException('Phone number is required');
-    }
-
-    // Check if phone number starts with 0 (common in some countries)
-    String finalPhoneNumber = cleanedPhoneNumber;
-    if (finalPhoneNumber.startsWith('0')) {
-      finalPhoneNumber = finalPhoneNumber.substring(1);
-    }
-
-    // Combine country code and phone number
-    final formattedNumber = cleanedCountryCode + finalPhoneNumber;
-
-    // Basic validation for minimum length
-    // WhatsApp requires numbers in E.164 format (min length varies by country)
-    if (formattedNumber.length < 8 || formattedNumber.length > 15) {
-      throw FormatException('Invalid phone number length');
-    }
-
-    return formattedNumber;
-  }
-
   static String? getFormattedTenDigitNumber(String phone) {
     // Remove spaces, '+', '(', ')', and black spaces
     String cleanedPhone = phone.replaceAll(RegExp(r'[\s+\(\)]'), '');
@@ -110,17 +78,21 @@ class Validator {
     return null;
   }
 
-  static String? validatePhoneNumber(String? value) {
-    if (value == null || value.isEmpty) {
+  static String? validatePhoneNumber(String? phone) {
+    if (phone == null || phone.trim().isEmpty) {
       return 'Phone number is required';
     }
-    // Check if the value is a 10-digit number
-    if (value.length != 10 || int.tryParse(value) == null) {
-      return 'Invalid: 10 Digit number required';
+
+    // ITU E.164: max 15 digits, min 5 digits
+    final regex = RegExp(r'^\d{5,15}$');
+
+    if (!regex.hasMatch(phone)) {
+      return 'Invalid phone number';
     }
-    // Return null if validation succeeds
-    return null;
+
+    return null; // ✅ Valid
   }
+
 
   static String? validatePinCode(String? value) {
     if (value == null || value.isEmpty) {

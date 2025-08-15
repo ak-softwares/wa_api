@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../../../common/dialog_box_massages/snack_bar_massages.dart';
 import '../../../../utils/constants/colors.dart';
+import '../../../../utils/constants/image_strings.dart';
+import '../../../personalization/models/user_model.dart';
+import '../../controllers/authentication_controller/authentication_controller.dart';
 import '../../controllers/login_controller/login_controller.dart';
+import '../../controllers/phone_otp_controller/phone_otp_controller.dart';
 import '../create_account/signup.dart';
 import '../../../../common/navigation_bar/appbar.dart';
 import '../../../../common/styles/spacing_style.dart';
@@ -11,7 +16,6 @@ import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/constants/text_strings.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../../../utils/validators/validation.dart';
-import '../social_login/social_buttons.dart';
 import 'forget_password.dart';
 
 class EmailLoginScreen extends StatelessWidget {
@@ -21,7 +25,10 @@ class EmailLoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final controller = Get.put(LoginController());
-    final dark = THelperFunctions.isDarkMode(context);
+    final oTPController = Get.put(OTPController());
+    final userController = Get.put(AuthenticationController());
+
+    final dark = HelperFunctions.isDarkMode(context);
     return Scaffold(
       appBar: const AppAppBar(title: "Login", showBackArrow: true),
       body: SingleChildScrollView(
@@ -93,7 +100,7 @@ class EmailLoginScreen extends StatelessWidget {
                                   )
                               )),
                           const SizedBox(height: AppSizes.inputFieldSpace / 2),
-                          //forget password and remember me
+                          // Forget password and remember me
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -113,12 +120,12 @@ class EmailLoginScreen extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(builder: (context) => ForgetPasswordScreen(email: controller.email.text.trim(),))
                                       );},
-                                    child: Text(AppTexts.forgotPassword, style: Theme.of(context).textTheme.labelLarge!.copyWith(color: AppColors.linkColor))
+                                    child: Text(AppTexts.forgotPassword, style: Theme.of(context).textTheme.labelLarge!.copyWith(color: AppColors.linkColorDark))
                                 )
                               ]
                           ),
 
-                          //Login button
+                          // Login button
                           const SizedBox(height: AppSizes.spaceBtwSection),
                           SizedBox(
                             width: double.infinity,
@@ -131,7 +138,7 @@ class EmailLoginScreen extends StatelessWidget {
                     )
                 ),
 
-                //Not a Member?  Divider
+                // Not a Member?  Divider
                 const SizedBox(height: AppSizes.spaceBtwSection),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -153,9 +160,36 @@ class EmailLoginScreen extends StatelessWidget {
                   ),
                 ),
 
-                //Social Login
+                // Social Login
                 const SizedBox(height: AppSizes.spaceBtwSection),
-                const TSocialButtons(),
+                OutlinedButton(
+                    onPressed: () async {
+                      try{
+                        final UserModel user = await oTPController.signInWithGoogle();
+                        userController.login(user: user);
+                      }catch(e) {
+                        AppMassages.errorSnackBar(title: 'Oh Snap!', message: e.toString());
+                      }
+                    },
+                    style: OutlinedButton.styleFrom(
+                      alignment: Alignment.center,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: oTPController.isSocialLogin.value
+                        ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: AppColors.whatsAppColor, strokeWidth: 2,))
+                        : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image(
+                            height: AppSizes.iconMd,
+                            width: AppSizes.iconMd,
+                            image: AssetImage(Images.google)
+                        ),
+                        SizedBox(width: AppSizes.inputFieldSpace),
+                        Text('Login with Google')
+                      ],
+                    )
+                ),
               ],
             ),
         ),

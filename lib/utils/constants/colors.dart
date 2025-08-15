@@ -36,14 +36,19 @@ class AppColors{
   static const Color messageSendInputCaptionDark = Color(0xFF8D9598);
 
   // Message Send Button
-  static const Color messageSendButtonLight = Color(0xFF1DAB61);
-  static const Color messageSendButtonDark = Color(0xFF21C063);
+  static const Color whatsappButtonLight = Color(0xFF1DAB61);
+  static const Color whatsappButtonDark = Color(0xFF21C063);
+
+  // Whatsapp Button Delete
+  static const Color deleteButtonLight1 = Color(0xFFE90039);
+  static const Color deleteButtonDark1 = Color(0xFFFB5062);
 
   // Input Border Color
   static const Color inputFieldBorderColor = Color(0xFF21C063);
 
-
-
+  // Link Color
+  static const Color linkColorLight = Color(0xFF0563BD);
+  static const Color linkColorDark = Color(0xFF5ABCE1);
 
 
   // App Basic Colors
@@ -52,7 +57,6 @@ class AppColors{
 
   // Link color
   static const Color offerColor = Color(0xFF2BAA3A);
-  static const Color linkColor = Colors.blue;
   static const Color refreshIndicator = Colors.blue;
 
   // Text Light

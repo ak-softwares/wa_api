@@ -4,7 +4,7 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wa_api/utils/formatters/formatters.dart';
 
-import '../../../../../common/text/clickable_text.dart';
+import 'clickable_text.dart';
 import '../../../../../utils/constants/colors.dart';
 
 class MessageBubble extends StatelessWidget {

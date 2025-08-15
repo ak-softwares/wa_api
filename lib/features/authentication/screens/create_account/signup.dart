@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 import '../../../../common/navigation_bar/appbar.dart';
 import '../../../../common/styles/spacing_style.dart';
+import '../../../../common/widgets/common/input_phone_field.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/constants/text_strings.dart';
 import '../../../../utils/validators/validation.dart';
@@ -106,25 +108,23 @@ class SignUpScreen extends StatelessWidget {
                               )
                         )),
 
-                        // Phone
-                        TextFormField(
-                            controller: controller.phone,
-                            validator: (value) => Validator.validatePhoneNumber(value),
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Iconsax.call),
-                              labelText: AppTexts.phone,
-                              // Default border (used when not focused)
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
-                                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
-                              ),
+                        PhoneNumberField(
+                          phoneController: controller.phoneNumber,
+                          countryCodeController: controller.countryCode,
+                          initialCountryCode: 'IN',
+                          // validator: (value) => Validator.validatePhoneNumber(value?.number),
+                        ),
 
-                              // Border when focused
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(AppSizes.inputFieldRadius)),
-                                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline, width: AppSizes.inputFieldBorderWidth),
-                              ),
-                            )
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Obx(() => Checkbox(
+                              value: controller.rememberMe.value,
+                              onChanged: (value) => controller.rememberMe.value = !controller.rememberMe.value,
+                            ),
+                            ),
+                            const Text(AppTexts.rememberMe),
+                          ],
                         ),
 
                         // Signup button

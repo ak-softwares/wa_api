@@ -7,6 +7,7 @@ class LocalStorageName{
 
   static const String rememberMeEmail     = 'REMEMBER_ME_EMAIL';
   static const String rememberMePassword  = 'REMEMBER_ME_PASSWORD';
+  static const String rememberMePhone     = 'REMEMBER_ME_PHONE';
   static const String authUserID          = 'AUTH_USER_ID';
   static const String loginExpiry         = 'LOGIN_EXPIRY';
   static const String userData            = 'USER_DATA';

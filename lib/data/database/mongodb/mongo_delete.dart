@@ -32,13 +32,4 @@ class MongoDelete extends MongoDatabase {
     }
   }
 
-  // Delete documents matching filter
-  Future<void> deleteDocuments({required String collectionName, required Map<String, dynamic> filter}) async {
-    await _ensureConnected();
-    try {
-      await db!.collection(collectionName).deleteMany(filter);
-    } catch (e) {
-      throw Exception('Failed to delete documents: $e');
-    }
-  }
 }

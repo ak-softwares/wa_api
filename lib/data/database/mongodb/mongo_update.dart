@@ -69,104 +69,26 @@ class MongoUpdate extends MongoDatabase {
     }
   }
 
-
-  Future<void> updateBalance({
+  Future<void> updateLastSeenBySessionId({
     required String collectionName,
-    required String entityId,
-    required double amount,
-    required bool isAddition,
+    required String sessionId,
+    required int lastSeenIndex,
   }) async {
     await _ensureConnected();
     try {
-      final objectId = ObjectId.fromHexString(entityId);
-
-      await db!.collection(collectionName).update(
-        where.id(objectId),
-        {'\$inc': {'balance': isAddition ? amount : -amount}},
-        upsert: true,
-      );
-    } catch (e) {
-      throw Exception('Failed to update balance: $e');
-    }
-  }
-
-  Future<void> updateDocuments({
-    required String collectionName,
-    required Map<String, dynamic> filter,
-    required Map<String, dynamic> updatedData,
-  }) async {
-    await _ensureConnected();
-    try {
-      final collection = db!.collection(collectionName);
-      await collection.updateMany(
-        filter,
-        {'\$set': updatedData},
-        upsert: true,
-      );
-    } catch (e) {
-      throw Exception('Failed to update documents: $e');
-    }
-  }
-
-  Future<void> updateManyDocuments({
-    required String collectionName,
-    required List<Map<String, dynamic>> updates,
-  }) async {
-    try {
-      await _ensureConnected();
-      final collection = db!.collection(collectionName);
-
-      for (var update in updates) {
-        final id = update['id'];
-        if (id != null) {
-          final updateData = Map<String, dynamic>.from(update)..remove('id');
-          await collection.updateOne(
-            where.eq('id', id),
-            {'\$set': updateData},
-            upsert: false,
-          );
-        }
-      }
-    } catch (e) {
-      throw Exception('Failed to update documents: $e');
-    }
-  }
-
-  Future<void> updateManyDocumentsById({
-    required String collectionName,
-    required List<String> ids,
-    required Map<String, dynamic> updatedData,
-  }) async {
-    await _ensureConnected();
-
-    try {
-      if (ids.isEmpty) {
-        throw ArgumentError('IDs list cannot be empty');
-      }
-
-      final objectIds = ids.map((id) {
-        try {
-          return ObjectId.fromHexString(id);
-        } catch (e) {
-          throw FormatException('Invalid ObjectId format for ID: $id');
-        }
-      }).toList();
-
-      final writeResult = await db!.collection(collectionName).updateMany(
-        {OrderFieldName.id: {'\$in': objectIds}},
-        {'\$set': updatedData},
+      final result = await db!.collection(collectionName).updateOne(
+        {ChatsFieldName.sessionId: sessionId},
+        {
+          r'$set': {ChatsFieldName.lastSeenIndex: lastSeenIndex},
+        },
         upsert: true,
       );
 
-      if (writeResult.nModified == 0) {
-        throw Exception('⚠️ No orders were updated - check if IDs exist');
+      if (!result.isSuccess || result.nModified == 0) {
+        throw Exception('No document was updated. Possibly invalid sessionId.');
       }
-    } on FormatException catch (e) {
-      throw Exception('ID format error: ${e.message}');
-    } on MongoDartError catch (e) {
-      throw Exception('Database operation failed: ${e.message}');
     } catch (e) {
-      throw Exception('Failed to update documents: ${e.toString()}');
+      rethrow;
     }
   }
 }

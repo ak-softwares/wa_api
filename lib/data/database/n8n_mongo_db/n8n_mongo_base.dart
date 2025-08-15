@@ -4,10 +4,11 @@ import 'package:mongo_dart/mongo_dart.dart';
 import '../../../features/authentication/controllers/authentication_controller/authentication_controller.dart';
 import '../../../features/personalization/models/user_model.dart';
 
-class UsersMongoDatabase {
+class N8nMongoDatabase {
 
   static Db? _db;
   static String? _host;
+  static String? _dbName; // store DB name
 
   // Initialize the database connection
   static Future<void> initialize() async {
@@ -24,7 +25,6 @@ class UsersMongoDatabase {
     if (_host == null) {
       await initialize();
     }
-
     if (_db == null || !_db!.isConnected) {
       _db = await Db.create(_host!);
       await _db!.open();

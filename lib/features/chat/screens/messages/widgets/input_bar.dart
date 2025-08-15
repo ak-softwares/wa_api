@@ -73,7 +73,7 @@ class ChatInputBar extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           CircleAvatar(
-            backgroundColor: isDark ? AppColors.messageSendButtonDark : AppColors.messageSendButtonLight,
+            backgroundColor: isDark ? AppColors.whatsappButtonDark : AppColors.whatsappButtonLight,
             child: IconButton(
               icon: Icon(Icons.send, color: Theme.of(context).colorScheme.onInverseSurface),
               onPressed: onSend,

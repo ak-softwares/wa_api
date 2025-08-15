@@ -10,7 +10,9 @@ import '../../../../data/repositories/mongodb/authentication/authentication_repo
 import '../../../../utils/constants/enums.dart';
 import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/local_storage_constants.dart';
-import '../../../../utils/helpers/encryption_hepler.dart';
+import '../../../../utils/formatters/formatters.dart';
+import '../../../../utils/helpers/encryption_helper.dart';
+import '../../../../utils/validators/validation.dart';
 import '../authentication_controller/authentication_controller.dart';
 import '../../../personalization/models/user_model.dart';
 import '../login_controller/login_controller.dart';
@@ -24,7 +26,10 @@ class SignupController extends GetxController{
   final name = TextEditingController();
   final email     = TextEditingController();
   final password  = TextEditingController();
-  final phone     = TextEditingController();
+  final phoneNumber     = TextEditingController();
+  final countryCode     = TextEditingController();
+  final rememberMe = true.obs; //Observable for Remember me checked or not
+
   GlobalKey<FormState> signupFormKey = GlobalKey<FormState>(); //Form key for form validation
 
   final userController = Get.put(AuthenticationController());
@@ -43,12 +48,13 @@ class SignupController extends GetxController{
         FullScreenLoader.stopLoading();
         return;
       }
+      final String fullPhoneNumber = AppFormatter.formatPhoneNumberForWhatsAppOTP(countryCode: countryCode.text.trim(), phoneNumber: phoneNumber.text.trim());
 
       UserModel user = UserModel(
         name: name.text.trim(),
         email: email.text.trim(),
         password: password.text.trim(),
-        phone: phone.text.trim(),
+        phone: fullPhoneNumber,
         dateCreated: DateTime.now(),
       );
 
@@ -56,8 +62,11 @@ class SignupController extends GetxController{
       user.id = id;
 
       // save to local storage
-      localStorage.write(LocalStorageName.rememberMeEmail, email.text.trim());
-      localStorage.write(LocalStorageName.rememberMePassword, password.text);
+      if(rememberMe.value){
+        localStorage.write(LocalStorageName.rememberMeEmail, email.text.trim());
+        localStorage.write(LocalStorageName.rememberMePassword, password.text);
+        localStorage.write(LocalStorageName.rememberMePhone, fullPhoneNumber);
+      }
 
       FullScreenLoader.stopLoading();
       await userController.login(user: user);

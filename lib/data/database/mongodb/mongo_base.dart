@@ -2,9 +2,6 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MongoDatabase {
-  // static final MongoBase _instance = MongoBase._internal();
-  // factory MongoBase() => _instance;
-  // MongoBase._internal();
 
   static Db? _db;
   static String? _host;

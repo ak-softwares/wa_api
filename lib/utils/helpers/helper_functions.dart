@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class THelperFunctions {
+class HelperFunctions {
 
   static void showSnackBar(String message) {
     ScaffoldMessenger.of(Get.context!).showSnackBar(

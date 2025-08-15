@@ -43,7 +43,7 @@ class FullScreenLoader {
                   SizedBox(
                       height: 25,
                       width: 25,
-                      child: CircularProgressIndicator(color: AppColors.linkColor, strokeWidth: 2,)
+                      child: CircularProgressIndicator(color: AppColors.linkColorDark, strokeWidth: 2,)
                   ),
                   SizedBox(height: 25),
                   Material(color: Colors.transparent, child: Text(text, style: TextStyle(fontSize: 14)))

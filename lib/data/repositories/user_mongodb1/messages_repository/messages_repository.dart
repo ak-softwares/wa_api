@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import '../../../../features/authentication/controllers/authentication_controller/authentication_controller.dart';
 import '../../../../features/chat/models/message_model.dart';
 import '../../../../utils/constants/api_constants.dart';
-import '../../../database/users_mongo_db/user_mongo_fetch.dart';
-import '../../../database/users_mongo_db/user_mongo_insert.dart';
+import '../../../database/n8n_mongo_db/user_mongo_fetch.dart';
+import '../../../database/n8n_mongo_db/user_mongo_insert.dart';
 import '../../user_whatsapp/send_message/send_message.dart';
 
 class MessagesRepository extends GetxController {
@@ -55,7 +55,7 @@ class MessagesRepository extends GetxController {
     try {
       _initializeUserContext();
 
-      final messagesData = await _userMongoFetch.fetchNewUserMessages(
+      final messagesData = await _userMongoFetch.fetchUsersNewMessages(
         collectionName: collectionName.value,
         sessionId: sessionId,
         lastIndex: lastIndex,
